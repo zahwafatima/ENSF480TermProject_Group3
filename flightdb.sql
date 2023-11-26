@@ -2,21 +2,15 @@ DROP DATABASE IF EXISTS FLIGHTDB;
 CREATE DATABASE FLIGHTDB; 
 USE FLIGHTDB;
 
--- airline in flight is not properly implemented yet***
--- will update data better later***
--- flight.crewList is being annoying***
-
-
-
 CREATE TABLE AIRLINE (
     airlineID INT AUTO_INCREMENT,
-    Airline_name VARCHAR(255) NOT NULL,
+    airline_name VARCHAR(255) NOT NULL,
     PRIMARY KEY (airlineID)
-
 );
+
 CREATE TABLE USERS (
     userID INT AUTO_INCREMENT,
-    isRegistered BOOLEAN, 
+    roles VARCHAR(100),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     street VARCHAR(100),
@@ -28,7 +22,6 @@ CREATE TABLE USERS (
     PRIMARY KEY (userID)
 );
 
--- Do we need this class or is it repetative since we already have these columns in the user table? Think we should delete.
 CREATE TABLE ADDRESS (
     street VARCHAR(100),
     city VARCHAR(50),
@@ -38,47 +31,44 @@ CREATE TABLE ADDRESS (
     FOREIGN KEY (userID) REFERENCES USERS(userID)
 );
 
+CREATE TABLE CREW (
+    crewID INT AUTO_INCREMENT,
+    pilot INT,
+    copilot INT,
+    flightAttendant1 INT,
+    flightAttendant2 INT,
+    flightAttendant3 INT,
+    flightAttendant4 INT,
+    PRIMARY KEY (crewID)
+);
+
+CREATE TABLE AIRCRAFT (
+    aircraftID INT AUTO_INCREMENT,
+    model VARCHAR(50) NOT NULL,
+    airline_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (aircraftID),
+    FOREIGN KEY (airline_name) REFERENCES AIRLINE(airline_name)
+);
+
 CREATE TABLE FLIGHT (
     flightNumber VARCHAR(5) NOT NULL,
-    destination_Country VARCHAR(20) NOT NULL,
+    destination_country VARCHAR(20) NOT NULL,
     destination_city VARCHAR(20) NOT NULL,
     origin_country VARCHAR(20) NOT NULL,
     origin_city VARCHAR(20) NOT NULL,
     capacity INT NOT NULL,
     departureDate DATE,
     arrivalDate DATE,
-    crewID VARCHAR(7),
+    crewID INT,
     aircraftID INT, 
     aircraftModel VARCHAR(20) NOT NULL, 
-    Airline_name VARCHAR(255) NOT NULL,
-    FOREIGN KEY (Airline_name) REFERENCES AIRLINE(Airline_name),
+    airline_name VARCHAR(255) NOT NULL,
     PRIMARY KEY (flightNumber),
+    FOREIGN KEY (airline_name) REFERENCES AIRLINE(airline_name),
     FOREIGN KEY (crewID) REFERENCES CREW(crewID),
     FOREIGN KEY (aircraftID) REFERENCES AIRCRAFT(aircraftID),
-    FOREIGN KEY (aircraaircraftModelftID) REFERENCES AIRCRAFT(model)
+    FOREIGN KEY (aircraftModel) REFERENCES AIRCRAFT(model)
 );
-
-CREATE TABLE AIRCRAFT (
-    aircraftID INT AUTO_INCREMENT,
-    model VARCHAR(50) NOT NULL,
-    Airline_name VARCHAR(255) NOT NULL,
-    FOREIGN KEY (Airline_name) REFERENCES AIRLINE(Airline_name),
-    PRIMARY KEY (aircraftID)
-);
-
-CREATE TABLE CREW (
-    crewID VARCHAR(7) NOT NULL,
-    flightNumber VARCHAR(5), 
-    pilot VARCHAR(50),
-    copilot VARCHAR(50),
-    flightAttendant1 VARCHAR(50),
-    flightAttendant2 VARCHAR(50),
-    flightAttendant3 VARCHAR(50),
-    flightAttendant4 VARCHAR(50),
-    PRIMARY KEY (crewID),
-    FOREIGN KEY (flightNumber) REFERENCES FLIGHT(flightNumber) 
-);
-
 
 CREATE TABLE SEAT (
     seatNumber VARCHAR(3) NOT NULL,
@@ -104,6 +94,8 @@ CREATE TABLE TICKET (
     FOREIGN KEY (seatNumber) REFERENCES SEAT(seatNumber),
     FOREIGN KEY (class) REFERENCES SEAT(seatClass)
 );
+
+
 
 
 -- Inserting data into USERS table
@@ -141,7 +133,7 @@ VALUES
 
 
 -- Inserting CREW data, 6 crew members per flight
-INSERT INTO CREW (crewID, flightNumber, pilot, copilot, flightAttendant1, flightAttendant2, flightAttendant3, flightAttendant4)
+INSERT INTO CREW (crewID, pilot, copilot, flightAttendant1, flightAttendant2, flightAttendant3, flightAttendant4)
 VALUES
 ('CR001', 'FL001', 'John Smith', 'Alice Johnson', 'Emily Davis', 'Michael Brown', 'Jessica Wilson', 'David Miller'),
 ('CR002', 'FL002', 'Robert Anderson', 'Olivia Martinez', 'Daniel Taylor', 'Sophia Jackson', 'Ethan Moore', 'Ava White'),
