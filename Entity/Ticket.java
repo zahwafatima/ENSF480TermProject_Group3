@@ -1,3 +1,4 @@
+package Entity;
 public class Ticket {
     private String ticketNumber;
     private Flight flightNumber;
