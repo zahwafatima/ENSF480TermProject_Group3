@@ -6,17 +6,7 @@ USE FLIGHTDB;
 -- will update data better later***
 -- flight.crewList is being annoying***
 
-CREATE TABLE FLIGHT (
-    flightNumber VARCHAR(5) NOT NULL,
-    airline VARCHAR(20) NOT NULL,
-    destination VARCHAR(20) NOT NULL,
-    origin VARCHAR(20) NOT NULL,
-    capacity INT NOT NULL,
-    departureDate DATE,
-    arrivalDate DATE,
-    crewList VARCHAR(1000),
-    PRIMARY KEY (flightNumber)
-);
+
 
 CREATE TABLE USERS (
     userID INT AUTO_INCREMENT,
@@ -27,10 +17,12 @@ CREATE TABLE USERS (
     city VARCHAR(50),
     country VARCHAR(50),
     email VARCHAR(100),
-    password VARCHAR(100),
+    pass VARCHAR(100),
+    phoneNumber VARCHAR(100),
     PRIMARY KEY (userID)
 );
 
+-- Do we need this class or is it repetative since we already have these columns in the user table? Think we should delete.
 CREATE TABLE ADDRESS (
     street VARCHAR(100),
     city VARCHAR(50),
@@ -40,23 +32,53 @@ CREATE TABLE ADDRESS (
     FOREIGN KEY (userID) REFERENCES USERS(userID)
 );
 
+CREATE TABLE FLIGHT (
+    flightNumber VARCHAR(5) NOT NULL,
+    airline VARCHAR(20) NOT NULL,
+    destination_Country VARCHAR(20) NOT NULL,
+    destination_city VARCHAR(20) NOT NULL,
+    origin_country VARCHAR(20) NOT NULL,
+    origin_city VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+    departureDate DATE,
+    arrivalDate DATE,
+    crewID VARCHAR(7),
+    aircraftID INT, 
+    aircraftModel VARCHAR(20) NOT NULL, 
+    PRIMARY KEY (flightNumber),
+    FOREIGN KEY (crewID) REFERENCES CREW(crewID),
+    FOREIGN KEY (aircraftID) REFERENCES AIRCRAFT(aircraftID),
+    FOREIGN KEY (aircraaircraftModelftID) REFERENCES AIRCRAFT(model)
+);
+
+CREATE TABLE AIRCRAFT (
+    aircraftID INT AUTO_INCREMENT,
+    model VARCHAR(50) NOT NULL,
+    PRIMARY KEY (aircraftID)
+);
+
 CREATE TABLE CREW (
     crewID VARCHAR(7) NOT NULL,
+    flightNumber VARCHAR(5), 
     pilot VARCHAR(50),
     copilot VARCHAR(50),
     flightAttendant1 VARCHAR(50),
     flightAttendant2 VARCHAR(50),
     flightAttendant3 VARCHAR(50),
     flightAttendant4 VARCHAR(50),
-    PRIMARY KEY (crewID)
+    PRIMARY KEY (crewID),
+    FOREIGN KEY (flightNumber) REFERENCES FLIGHT(flightNumber) 
 );
 
+
 CREATE TABLE SEAT (
-	seatNumber VARCHAR(3) NOT NULL,
+    seatNumber VARCHAR(3) NOT NULL,
     seatClass VARCHAR(50) NOT NULL,
     isBooked BOOLEAN,
     price DECIMAL(10,2),
-    PRIMARY KEY (seatNumber)
+    ticketNumber VARCHAR(5) NOT NULL,
+    PRIMARY KEY (seatNumber, flightNumber),
+    FOREIGN KEY (ticketNumber) REFERENCES TICKET(ticketNumber)
 );
 
 CREATE TABLE TICKET (
@@ -70,21 +92,27 @@ CREATE TABLE TICKET (
     PRIMARY KEY (ticketNumber),
     FOREIGN KEY (flightNumber) REFERENCES FLIGHT(flightNumber),
     FOREIGN KEY (userID) REFERENCES USERS(userID),
-    FOREIGN KEY (seatNumber) REFERENCES SEAT(seatNumber)
+    FOREIGN KEY (seatNumber) REFERENCES SEAT(seatNumber),
+    FOREIGN KEY (class) REFERENCES SEAT(seatClass)
 );
 
 
 -- Inserting data into USERS table
-INSERT INTO USERS (isRegistered, firstName, lastName, street, city, country, email, password)
+INSERT INTO USERS (isRegistered, firstName, lastName, street, city, country, email, pass, phoneNumber)
 VALUES
-(1, 'John', 'Smith', '123 Main St', 'New York', 'USA', 'email@email.com', '12345'),
-(1, 'Jane', 'Doe', '456 Main St', 'New York', 'USA', 'aaa@email.com', 'password'),
-(1, 'Your', 'Mom', '789 Main St', 'New York', 'USA', 'bbbb@email.com', '1111'),
-(0, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(0, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(0, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(true, 'John', 'Doe', '123 Main St', 'Cityville', 'Countryland', 'john.doe@example.com', 'password123', 1234567890),
+(true, 'Jane', 'Smith', '456 Oak St', 'Townsville', 'Countryland', 'jane.smith@example.com', 'pass456', 9876543210),
+(true, 'Alice', 'Johnson', '789 Pine St', 'Villagetown', 'Countryland', 'alice.johnson@example.com', 'secretPass', 5551234567),
+(false, 'Bob', 'Brown', '101 Maple St', 'Cityville', 'Countryland', 'bob.brown@example.com', 'password987', 3216549870),
+(false, 'Eva', 'Miller', '202 Elm St', 'Townsville', 'Countryland', 'eva.miller@example.com', 'pass789', 7894561230),
+(true, 'Michael', 'Davis', '303 Birch St', 'Villagetown', 'Countryland', 'michael.davis@example.com', 'myPassword', 6549873210),
+(false, 'Sophia', 'Anderson', '404 Cedar St', 'Cityville', 'Countryland', 'sophia.anderson@example.com', 'securePass', 4567890123),
+(false, 'Daniel', 'White', '505 Pine St', 'Townsville', 'Countryland', 'daniel.white@example.com', 'danielPass', 7890123456),
+(true, 'Olivia', 'Moore', '606 Oak St', 'Villagetown', 'Countryland', 'olivia.moore@example.com', 'oliviaPass', 1597534680),
+(false, 'James', 'Taylor', '707 Birch St', 'Cityville', 'Countryland', 'james.taylor@example.com', 'james123', 3571592468);
 
--- Inserting data into ADDRESS table
+
+-- Inserting data into ADDRESS table. Delete? 
 INSERT INTO ADDRESS (street, city, country, userID)
 VALUES
 ('123 Main St', 'New York', 'USA', 1),
@@ -92,145 +120,144 @@ VALUES
 ('789 Main St', 'New York', 'USA', 3);
 
 -- Inserting flights
-INSERT INTO FLIGHT (flightNumber, airline, destination, origin, capacity, departureDate, arrivalDate)
+INSERT INTO FLIGHT (flightNumber, airline, destination_Country, destination_city, origin_country, origin_city, capacity, departureDate, arrivalDate)
 VALUES
-('FL001', 'Delta', 'London', 'New York', 200, '2023-12-01', '2023-12-02'),
-('FL002', 'United', 'Paris', 'Los Angeles', 180, '2023-12-05', '2023-12-06'),
-('FL003', 'Lufthansa', 'Tokyo', 'Berlin', 220, '2023-12-10', '2023-12-11'),
-('FL004', 'Emirates', 'Dubai', 'New York', 250, '2023-12-15', '2023-12-16'),
-('FL005', 'British Airways', 'Rome', 'London', 190, '2023-12-20', '2023-12-21'),
-('FL006', 'Qatar Airways', 'Sydney', 'Tokyo', 230, '2023-12-25', '2023-12-26');
+('FL001', 'Delta', 'UK', 'London', 'USA', 'New York', 200, '2023-12-01', '2023-12-02'),
+('FL002', 'United', 'France', 'Paris', 'USA', 'Los Angeles', 180, '2023-12-05', '2023-12-06'),
+('FL003', 'Lufthansa', 'Japan', 'Tokyo', 'Germany', 'Berlin', 220, '2023-12-10', '2023-12-11'),
+('FL004', 'Emirates', 'UAE', 'Dubai', 'USA', 'New York', 250, '2023-12-15', '2023-12-16'),
+('FL005', 'British Airways', 'Italy', 'Rome', 'UK', 'London', 190, '2023-12-20', '2023-12-21'),
+('FL006', 'Qatar Airways', 'Australia', 'Sydney', 'Japan', 'Tokyo', 230, '2023-12-25', '2023-12-26');
+
 
 
 -- Inserting CREW data, 6 crew members per flight
-INSERT INTO CREW (crewID, pilot, copilot, flightAttendant1, flightAttendant2, flightAttendant3, flightAttendant4)
+INSERT INTO CREW (crewID, flightNumber, pilot, copilot, flightAttendant1, flightAttendant2, flightAttendant3, flightAttendant4)
 VALUES
-('C001', 'Harry Potter', 'Ron Weasley', 'Hermione Granger', 'Ginny Weasley', 'Luna Lovegood', 'Neville Longbottom'),
-('C002', 'Jack Sparrow', 'Will Turner', 'Elizabeth Swann', 'Joshamee Gibbs', 'Hector Barbossa', 'James Norrington'),
-('C003', 'Luke Skywalker', 'Han Solo', 'Leia Organa', 'Chewbacca', 'Obi-Wan Kenobi', 'Yoda'),
-('C004', 'Frodo Baggins', 'Samwise Gamgee', 'Gandalf', 'Aragorn', 'Legolas', 'Gimli'),
-('C005', 'Tony Stark', 'Steve Rogers', 'Natasha Romanoff', 'Bruce Banner', 'Clint Barton', 'Thor');
+('CR001', 'FL001', 'John Smith', 'Alice Johnson', 'Emily Davis', 'Michael Brown', 'Jessica Wilson', 'David Miller'),
+('CR002', 'FL002', 'Robert Anderson', 'Olivia Martinez', 'Daniel Taylor', 'Sophia Jackson', 'Ethan Moore', 'Ava White'),
+('CR003', 'FL003', 'William Davis', 'Emma Harris', 'Matthew Jones', 'Lily Anderson', 'Christopher Wilson', 'Grace Martin'),
+('CR004', 'FL004', 'James Taylor', 'Sophia Wilson', 'Andrew Moore', 'Olivia Harris', 'Samuel Jackson', 'Ava Davis'),
+('CR005', 'FL005', 'Ethan Brown', 'Ava Johnson', 'Michael Smith', 'Emily Martin', 'Daniel White', 'Sophia Taylor'),
+('CR006', 'FL006', 'Olivia White', 'Daniel Moore', 'Grace Anderson', 'David Taylor', 'Sophia Smith', 'Ethan Jackson');
+
 
 
 -- Inserting SEAT data - 30 seats per flight, 10 first class, 20 economy, 10 seats per row
-INSERT INTO SEAT (seatNumber, seatClass, isBooked, price)
+-- First Class
+INSERT INTO SEAT (seatNumber, seatClass, isBooked, price, ticketNumber)
 VALUES
-('1A', 'First', 0, 1000.00),
-('1B', 'First', 0, 1000.00),
-('1C', 'First', 0, 1000.00),
-('2A', 'First', 0, 1000.00),
-('2B', 'First', 0, 1000.00),
-('2C', 'First', 0, 1000.00),
-('3A', 'First', 0, 1000.00),
-('3B', 'First', 0, 1000.00),
-('3C', 'First', 0, 1000.00),
-('4A', 'First', 0, 1000.00),
-('4B', 'First', 0, 1000.00),
-('4C', 'First', 0, 1000.00),
-('5A', 'First', 0, 1000.00),
-('5B', 'First', 0, 1000.00),
-('5C', 'First', 0, 1000.00),
-('6A', 'First', 0, 1000.00),
-('6B', 'First', 0, 1000.00),
-('6C', 'First', 0, 1000.00),
-('7A', 'First', 0, 1000.00),
-('7B', 'First', 0, 1000.00),
-('7C', 'First', 0, 1000.00),
-('8A', 'First', 0, 1000.00),
-('8B', 'First', 0, 1000.00),
-('8C', 'First', 0, 1000.00),
-('9A', 'First', 0, 1000.00),
-('9B', 'First', 0, 1000.00),
-('9C', 'First', 0, 1000.00),
-('10A', 'First', 0, 1000.00),
-('10B', 'First', 0, 1000.00),
-('10C', 'First', 0, 1000.00),
-('11A', 'Economy', 0, 500.00),
-('11B', 'Economy', 0, 500.00),
-('11C', 'Economy', 0, 500.00),
-('12A', 'Economy', 0, 500.00),
-('12B', 'Economy', 0, 500.00),
-('12C', 'Economy', 0, 500.00),
-('13A', 'Economy', 0, 500.00),
-('13B', 'Economy', 0, 500.00),
-('13C', 'Economy', 0, 500.00),
-('14A', 'Economy', 0, 500.00),
-('14B', 'Economy', 0, 500.00),
-('14C', 'Economy', 0, 500.00),
-('15A', 'Economy', 0, 500.00),
-('15B', 'Economy', 0, 500.00),
-('15C', 'Economy', 0, 500.00),
-('16A', 'Economy', 0, 500.00),
-('16B', 'Economy', 0, 500.00),
-('16C', 'Economy', 0, 500.00),
-('17A', 'Economy', 0, 500.00),
-('17B', 'Economy', 0, 500.00),
-('17C', 'Economy', 0, 500.00),
-('18A', 'Economy', 0, 500.00),
-('18B', 'Economy', 0, 500.00),
-('18C', 'Economy', 0, 500.00),
-('19A', 'Economy', 0, 500.00),
-('19B', 'Economy', 0, 500.00),
-('19C', 'Economy', 0, 500.00),
-('20A', 'Economy', 0, 500.00),
-('20B', 'Economy', 0, 500.00),
-('20C', 'Economy', 0, 500.00),
-('21A', 'Economy', 0, 500.00),
-('21B', 'Economy', 0, 500.00),
-('21C', 'Economy', 0, 500.00),
-('22A', 'Economy', 0, 500.00),
-('22B', 'Economy', 0, 500.00),
-('22C', 'Economy', 0, 500.00),
-('23A', 'Economy', 0, 500.00),
-('23B', 'Economy', 0, 500.00),
-('23C', 'Economy', 0, 500.00),
-('24A', 'Economy', 0, 500.00),
-('24B', 'Economy', 0, 500.00),
-('24C', 'Economy', 0, 500.00),
-('25A', 'Economy', 0, 500.00),
-('25B', 'Economy', 0, 500.00),
-('25C', 'Economy', 0, 500.00),
-('26A', 'Economy', 0, 500.00),
-('26B', 'Economy', 0, 500.00),
-('26C', 'Economy', 0, 500.00),
-('27A', 'Economy', 0, 500.00),
-('27B', 'Economy', 0, 500.00),
-('27C', 'Economy', 0, 500.00),
-('28A', 'Economy', 0, 500.00),
-('28B', 'Economy', 0, 500.00),
-('28C', 'Economy', 0, 500.00),
-('29A', 'Economy', 0, 500.00),
-('29B', 'Economy', 0, 500.00),
-('29C', 'Economy', 0, 500.00),
-('30A', 'Economy', 0, 500.00),
-('30B', 'Economy', 0, 500.00),
-('30C', 'Economy', 0, 500.00);
+('1A', 'First Class', false, 1500.00, 'T001'),
+('1B', 'First Class', false, 1500.00, 'T002'),
+('1C', 'First Class', false, 1500.00, 'T003'),
+('2A', 'First Class', false, 1500.00, 'T004'),
+('2B', 'First Class', false, 1500.00, 'T005'),
+('2C', 'First Class', false, 1500.00, 'T006'),
+('3A', 'First Class', false, 1500.00, 'T007'),
+('3B', 'First Class', false, 1500.00, 'T008'),
+('3C', 'First Class', false, 1500.00, 'T009'),
+('4A', 'First Class', false, 1500.00, 'T010'),
+('4B', 'First Class', false, 1500.00, 'T011'),
+('4C', 'First Class', false, 1500.00, 'T012'),
+('5A', 'First Class', false, 1500.00, 'T013'),
+('5B', 'First Class', false, 1500.00, 'T014'),
+('5C', 'First Class', false, 1500.00, 'T015'),
+('6A', 'Business Class', false, 1000.00, 'T016'),
+('6B', 'Business Class', false, 1000.00, 'T017'),
+('6C', 'Business Class', false, 1000.00, 'T018'),
+('7A', 'Business Class', false, 1000.00, 'T019'),
+('7B', 'Business Class', false, 1000.00, 'T020'),
+('7C', 'Business Class', false, 1000.00, 'T021'),
+('8A', 'Business Class', false, 1000.00, 'T022'),
+('8B', 'Business Class', false, 1000.00, 'T023'),
+('8C', 'Business Class', false, 1000.00, 'T024'),
+('9A', 'Business Class', false, 1000.00, 'T025'),
+('9B', 'Business Class', false, 1000.00, 'T026'),
+('9C', 'Business Class', false, 1000.00, 'T027'),
+('10A', 'Business Class', false, 1000.00, 'T028'),
+('10B', 'Business Class', false, 1000.00, 'T029'),
+('10C', 'Business Class', false, 1000.00, 'T030'),
+('11A', 'Business Class', false, 1000.00, 'T031'),
+('11B', 'Business Class', false, 1000.00, 'T032'),
+('11C', 'Business Class', false, 1000.00, 'T033'),
+('12A', 'Business Class', false, 1000.00, 'T034'),
+('12B', 'Business Class', false, 1000.00, 'T035'),
+('12C', 'Business Class', false, 1000.00, 'T036'),
+('13A', 'Business Class', false, 1000.00, 'T037'),
+('13B', 'Business Class', false, 1000.00, 'T038'),
+('13C', 'Business Class', false, 1000.00, 'T039'),
+('14A', 'Economy Class', false, 500.00, 'T047'),
+('16C', 'Economy Class', false, 1000.00, 'T040'),
+('14B', 'Economy Class', false, 500.00, 'T047'),
+('16C', 'Economy Class', false, 1000.00, 'T041'),
+('14C', 'Economy Class', false, 500.00, 'T047'),
+('16C', 'Economy Class', false, 1000.00, 'T042'),
+('15A', 'Economy Class', false, 500.00, 'T047'),
+('16C', 'Economy Class', false, 1000.00, 'T043'),
+('15B', 'Economy Class', false, 500.00, 'T047'),
+('16C', 'Economy Class', false, 1000.00, 'T044'),
+('15C', 'Economy Class', false, 500.00, 'T047'),
+('16C', 'Economy Class', false, 1000.00, 'T045'),
+('16A', 'Economy Class', false, 500.00, 'T046'),
+('16B', 'Economy Class', false, 500.00, 'T047'),
+('16C', 'Economy Class', false, 500.00, 'T048'),
+('17A', 'Economy Class', false, 500.00, 'T049'),
+('17B', 'Economy Class', false, 500.00, 'T050'),
+('17C', 'Economy Class', false, 500.00, 'T051'),
+('18A', 'Economy Class', false, 500.00, 'T052'),
+('18B', 'Economy Class', false, 500.00, 'T053'),
+('18C', 'Economy Class', false, 500.00, 'T054'),
+('19A', 'Economy Class', false, 500.00, 'T055'),
+('19B', 'Economy Class', false, 500.00, 'T056'),
+('19C', 'Economy Class', false, 500.00, 'T057'),
+('20A', 'Economy Class', false, 500.00, 'T058'),
+('20B', 'Economy Class', false, 500.00, 'T059'),
+('20C', 'Economy Class', false, 500.00, 'T060');
+
+
 
 -- Inserting TICKET data
-INSERT INTO TICKET (ticketNumber, flightNumber, passenger_fName, passenger_lName, seatNumber, class, userID)
+INSERT INTO TICKET(ticketNumber, flightNumber, passenger_fName, passenger_lName, seatNumber, class, userID)
 VALUES
-('T001', 'FL001', 'John', 'Smith', '1A', 'First', 1),
-('T002', 'FL001', 'Jane', 'Doe', '1B', 'First', 2),
-('T003', 'FL001', 'Your', 'Mom', '1C', 'First', 3),
-('T004', 'FL001', NULL, NULL, NULL, NULL, 4),
-('T005', 'FL001', NULL, NULL, NULL, NULL, 5),
-('T006', 'FL001', NULL, NULL, NULL, NULL, 6),
-('T007', 'FL002', 'John', 'Smith', '2A', 'First', 1),
-('T008', 'FL002', 'Jane', 'Doe', '2B', 'First', 2),
-('T009', 'FL002', 'Your', 'Mom', '2C', 'First', 3),
-('T010', 'FL002', NULL, NULL, NULL, NULL, 4),
-('T011', 'FL002', NULL, NULL, NULL, NULL, 5),
-('T012', 'FL002', NULL, NULL, NULL, NULL, 6),
-('T013', 'FL003', 'John', 'Smith', '3A', 'First', 1),
-('T014', 'FL003', 'Jane', 'Doe', '3B', 'First', 2),
-('T015', 'FL003', 'Your', 'Mom', '3C', 'First', 3),
-('T016', 'FL003', NULL, NULL, NULL, NULL, 4),
-('T017', 'FL003', NULL, NULL, NULL, NULL, 5),
-('T018', 'FL003', NULL, NULL, NULL, NULL, 6),
-('T019', 'FL004', 'John', 'Smith', '4A', 'First', 1),
-('T020', 'FL004', 'Jane', 'Doe', '4B', 'First', 2),
-('T021', 'FL004', 'Your', 'Mom', '4C', 'First', 3),
-('T022', 'FL004', NULL, NULL, NULL, NULL, 4);
+
+('T001', 'FL001', 'John', 'Doe', '1A', 'First Class', 1),
+('T002', 'FL001', 'Jane', 'Smith', '1B', 'First Class', 2),
+('T003', 'FL001', 'Mike', 'Johnson', '1C', 'First Class', 3),
+
+('T004', 'FL001', 'Emily', 'Williams', '6A', 'Business Class', 4),
+('T005', 'FL001', 'Chris', 'Brown', '6B', 'Business Class', 5),
+('T006', 'FL001', 'Sophia', 'Taylor', '6C', 'Business Class', 6),
+
+('T007', 'FL001', 'Daniel', 'Miller', '16A', 'Economy Class', 7),
+('T008', 'FL001', 'Olivia', 'Anderson', '16B', 'Economy Class', 8),
+('T009', 'FL001', 'Aiden', 'White', '16C', 'Economy Class', 9),
+('T010', 'FL001', '', '', '7A', 'Economy Class', NULL),
+('T011', 'FL001', '', '', '7B', 'Economy Class', NULL),
+('T012', 'FL001', '', '', '7C', 'Economy Class', NULL),
+('T013', 'FL001', '', '', '18A', 'Business Class', NULL),
+('T014', 'FL001', '', '', '18B', 'Business Class', NULL),
+('T015', 'FL001', '', '', '18C', 'Business Class', NULL),
+('T016', 'FL001', '', '', '29A', 'Economy Class', NULL),
+('T017', 'FL001', '', '', '29B', 'Economy Class', NULL),
+('T018', 'FL001', '', '', '29C', 'Economy Class', NULL),
+('T019', 'FL001', '', '', '10A', 'Business Class', NULL),
+('T020', 'FL001', '', '', '10B', 'Business Class', NULL),
+('T021', 'FL001', '', '', '10C', 'Business Class', NULL),
+('T022', 'FL001', '', '', '20A', 'Business Class', NULL),
+('T023', 'FL001', '', '', '20B', 'Business Class', NULL),
+('T024', 'FL001', '', '', '20C', 'Business Class', NULL),
+('T025', 'FL001', '', '', '3A', 'First Class', NULL),
+('T026', 'FL001', '', '', '13B', 'Business Class', NULL),
+('T027', 'FL001', '', '', '23C', 'Economy Class', NULL),
+('T028', 'FL001', '', '', '14C', 'Business Class', NULL),
+('T029', 'FL001', '', '', '25A', 'Economy Class', NULL),
+('T030', 'FL001', '', '', '15C', 'Business Class', NULL);
+
+
+
+-- Add more entries as needed
+;
+
 
 ALTER TABLE FLIGHT
 ADD COLUMN crewID VARCHAR(7),

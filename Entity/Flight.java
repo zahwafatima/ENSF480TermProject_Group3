@@ -4,13 +4,12 @@ import java.util.ArrayList;
 public class Flight {
     private String flightNumber;
     private Airline airline;
+    private Aircraft aircraft;
     private Location destination;
     private Location origin;
     private int seatCapacity;
     private String departureTime;
     private String arrivalTime;
-    private ArrayList<Passenger> passengerList;
-    private ArrayList<Crew> crewList;
     
     // Constructor
     public Flight(String flightNumber, Airline airline, Location destination, Location origin, int seatCapacity, String departureTime, String arrivalTime) {
