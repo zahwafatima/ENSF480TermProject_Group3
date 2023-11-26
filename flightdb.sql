@@ -8,6 +8,12 @@ USE FLIGHTDB;
 
 
 
+CREATE TABLE AIRLINE (
+    airlineID INT AUTO_INCREMENT,
+    Airline_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (airlineID)
+
+);
 CREATE TABLE USERS (
     userID INT AUTO_INCREMENT,
     isRegistered BOOLEAN, 
@@ -34,7 +40,6 @@ CREATE TABLE ADDRESS (
 
 CREATE TABLE FLIGHT (
     flightNumber VARCHAR(5) NOT NULL,
-    airline VARCHAR(20) NOT NULL,
     destination_Country VARCHAR(20) NOT NULL,
     destination_city VARCHAR(20) NOT NULL,
     origin_country VARCHAR(20) NOT NULL,
@@ -45,6 +50,8 @@ CREATE TABLE FLIGHT (
     crewID VARCHAR(7),
     aircraftID INT, 
     aircraftModel VARCHAR(20) NOT NULL, 
+    Airline_name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (Airline_name) REFERENCES AIRLINE(Airline_name),
     PRIMARY KEY (flightNumber),
     FOREIGN KEY (crewID) REFERENCES CREW(crewID),
     FOREIGN KEY (aircraftID) REFERENCES AIRCRAFT(aircraftID),
@@ -54,6 +61,8 @@ CREATE TABLE FLIGHT (
 CREATE TABLE AIRCRAFT (
     aircraftID INT AUTO_INCREMENT,
     model VARCHAR(50) NOT NULL,
+    Airline_name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (Airline_name) REFERENCES AIRLINE(Airline_name),
     PRIMARY KEY (aircraftID)
 );
 
