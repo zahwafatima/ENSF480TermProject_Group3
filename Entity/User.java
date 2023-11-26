@@ -1,44 +1,41 @@
+package Entity;
 import java.util.Date;
 
+import Controller.Login;
+
+
 public class User {
-    private int userID;
-    private String name;
-    private String email;
+    private Login login;
+    private Name name;
     private Date dateOfBirth;
     private String phoneNumber;
-    private String address;
-    //constructor
-    public User(int userID,String name,String email,Date dateOfBirth,String phoneNumber,String address){
-        this.userID = userID;
+    private Address address;
+    private boolean isRegistered; 
+
+    // Constructor
+    public User(Login login, Name name, Date dateOfBirth, String phoneNumber, Address address) {
+        this.login = login;
         this.name = name;
-        this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.phoneNumber = phoneNumber;
         this.address = address;
     }
+
     // Getters and setters
-    public int getUserID() {
-        return userID;
+    public Login getLogin() {
+        return login;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setLogin(Login login) {
+        this.login = login;
     }
 
-    public String getName() {
+    public Name getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(Name name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Date getDateOfBirth() {
@@ -57,11 +54,11 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 }

@@ -1,23 +1,15 @@
-public class Address {
-    
-    private String street;
-    private String city; 
+package Entity;
+public class Location {
+    private String city;
     private String country;
-    
+
     // Constructor
-    public Address(String street, String city, String country) {
-        this.street = street;
+    public Location(String city, String country) {
         this.city = city;
         this.country = country;
     }
 
-    //getters and setters
-    public String getStreet(){
-        return street;
-    }
-    public void setStreet(String Street){
-        this.street = Street;
-    }
+    // Getter and Setter
     public String getCity() {
         return city;
     }
@@ -33,6 +25,4 @@ public class Address {
     public void setCountry(String country) {
         this.country = country;
     }
-
 }
-
