@@ -1,7 +1,7 @@
 package Entity;
 import java.util.Date;
 
-import Controller.Login;
+import controller.Login;
 
 
 public class User {
