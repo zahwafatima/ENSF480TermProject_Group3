@@ -1,7 +1,8 @@
+package controller;
 import java.util.ArrayList;
 
 public class Login {
-    private ArrayList<String> emailList;
+    private ArrayList<String> emailList; //CHANGE to save to database instead of list 
     private ArrayList<String> passwordList;
 
     private static Login onlyInstance;
@@ -19,11 +20,11 @@ public class Login {
     }
 
     public void addUser(String email, String password) {
-        emailList.add(email);
+        emailList.add(email); //CHANGE to save to database instead of list 
         passwordList.add(password);
     }
 
-    public boolean isValidUser(String email, String password) {
+    public boolean isValidUser(String email, String password) { //CHANGE to save to database instead of list 
         int index = emailList.indexOf(email);
         if (index != -1) {
             // Email found, check the corresponding password
