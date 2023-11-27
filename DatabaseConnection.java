@@ -1,20 +1,35 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.*;
 
 public class DatabaseConnection {
-    private static final String JDBC_URL = "jdbc:mysql://localhost/FLIGHTDB";
+    private static final String JDBC_URL = "jdbc:mysql://localhost/flightdb";
     private static final String USERNAME = "flightReserve";
     private static final String PASSWORD = "password";
+    private Connection dbConnect;
+    private ResultSet results;
 
-    public static Connection getConnection() {
-        try {
-            Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-            System.out.println("Connected to the database successfully!");
-            return connection;
+    public DatabaseConnection(){
+        createConnection(JDBC_URL, USERNAME, PASSWORD);
+    }
+    public void createConnection(String link, String username, String password){
+        try{
+            dbConnect = DriverManager.getConnection(link, username, password);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Failed to connect to the database. Check your connection details.", e);
+        }
+
+    }
+
+    public static void main(String[] args) {
+        DatabaseConnection dbConnection = new DatabaseConnection();
+
+        if (dbConnection.dbConnect != null) {
+            System.out.println("Connection to the database is successful!");
+        } else {
+            System.out.println("Failed to connect to the database. Check your connection details.");
         }
     }
 }
