@@ -1,16 +1,13 @@
-import java.sql.Connection;
 
 public class FlightReservation{
     public static void main(String[] args) {
-        Connection connection = DatabaseConnection.getConnection();
+        DatabaseConnection dbConnection = new DatabaseConnection();
 
-        try {
-            if (connection != null) {
-                connection.close();
-                System.out.println("Connection closed.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (dbConnection.dbConnect != null) {
+            System.out.println("Connection to the database is successful!");
+        } else {
+            System.out.println("Failed to connect to the database. Check your connection details.");
         }
     }
 }
+

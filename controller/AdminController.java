@@ -1,33 +1,42 @@
-package controller;
+package Controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
+import DatabaseConnection;
 import Entity.Aircraft;
 import Entity.Crew;
 import Entity.Date;
 import Entity.Flight;
 
-import DatabaseConnection;
-
 public class AdminController {
     
+
     // Browse the list of flights, their origin and destination in a specific date.
-    public void browse_flights_spec(Date date){
-        try (DatabaseConnection connection = DatabaseConnection.getConnection()) {
+    public Map<String, Flight> browse_flights_spec(Date date){
+        Map<String, Flight> flightsMap = new HashMap<>();
+
+        try (Connection connection = DatabaseConnection.getConnection()) {
             String query = "SELECT * FROM FLIGHT WHERE departureDate = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                java.sql.Date sqlDate = new java.sql.Date(date.getYear() - 1900, date.getMonth() - 1, date.getDay());
+                java.sql.Date sqlDate = new java.sql.Date(date.getYear(), date.getMonth(), date.getDay());
                 preparedStatement.setDate(1, sqlDate);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    displayFlightsInPopup(resultSet);
+                    while (resultSet.next()) {
+                        Flight flight = createFlightFromResultSet(resultSet);
+                        flightsMap.put(flight.getFlightNumber(), flight);
+                    }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return flightsMap;
     }
 
     public void browse_crew_spec(Crew crew){

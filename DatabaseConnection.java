@@ -1,3 +1,4 @@
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,7 +9,7 @@ public class DatabaseConnection {
     private static final String JDBC_URL = "jdbc:mysql://localhost/flightdb";
     private static final String USERNAME = "flightReserve";
     private static final String PASSWORD = "password";
-    private Connection dbConnect;
+    public Connection dbConnect;
     private ResultSet results;
 
     public DatabaseConnection(){
@@ -23,14 +24,6 @@ public class DatabaseConnection {
 
     }
 
-    public static void main(String[] args) {
-        DatabaseConnection dbConnection = new DatabaseConnection();
 
-        if (dbConnection.dbConnect != null) {
-            System.out.println("Connection to the database is successful!");
-        } else {
-            System.out.println("Failed to connect to the database. Check your connection details.");
-        }
-    }
 }
 
