@@ -23,14 +23,7 @@ CREATE TABLE USERS (
     PRIMARY KEY (userID)
 );
 
-CREATE TABLE ADDRESS (
-    street VARCHAR(100),
-    city VARCHAR(50),
-    country VARCHAR(50),
-    userID INT,
-    PRIMARY KEY (street, city, country),
-    FOREIGN KEY (userID) REFERENCES USERS(userID)
-);
+
 
 CREATE TABLE CREW (
     crewID INT AUTO_INCREMENT,
