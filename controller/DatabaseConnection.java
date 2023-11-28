@@ -10,12 +10,21 @@ public class DatabaseConnection {
     private static final String JDBC_URL = "jdbc:mysql://localhost/flightdb";
     private static final String USERNAME = "flightReserve";
     private static final String PASSWORD = "password";
-    public Connection dbConnect;
-    private ResultSet results;
 
-    public DatabaseConnection(){
+    private static DatabaseConnection onlyInstance;
+    private Connection dbConnect;
+
+    private DatabaseConnection(){
         createConnection(JDBC_URL, USERNAME, PASSWORD);
     }
+
+    public static DatabaseConnection getOnlyInstance(){
+        if (onlyInstance == null){
+            onlyInstance = new DatabaseConnection();
+        }
+        return onlyInstance;
+    }
+
     public void createConnection(String link, String username, String password){
         try{
             dbConnect = DriverManager.getConnection(link, username, password);
@@ -24,7 +33,6 @@ public class DatabaseConnection {
         }
 
     }
-
 
 }
 
