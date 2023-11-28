@@ -3,23 +3,26 @@ import java.util.ArrayList;
 
 public class Flight {
     private String flightNumber;
-    private Airline airline;
-    private Aircraft aircraft;
+    private String crewID;
+    //private Airline airline;
     private Location destination;
     private Location origin;
     private int seatCapacity;
     private String departureTime;
     private String arrivalTime;
+    private Aircraft aircraft;
     
     // Constructor
-    public Flight(String flightNumber, Airline airline, Location destination, Location origin, int seatCapacity, String departureTime, String arrivalTime) {
+    public Flight(String flightNumber, String crewID, Location destination, Location origin, int seatCapacity, String departureTime, String arrivalTime, Aircraft aircraft) {
         this.flightNumber = flightNumber;
-        this.airline = airline;
+        this.crewID = crewID;
+        //this.airline = airline;
         this.destination = destination;
         this.origin = origin;
         this.seatCapacity= seatCapacity;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.aircraft = aircraft; // need copy ctor???
     }
 
     // Getters
@@ -27,8 +30,12 @@ public class Flight {
         return flightNumber;
     }
 
-    public Airline getAirline() {
-        return airline;
+    // public Airline getAirline() {
+    //     return airline;
+    // }
+
+    public String getCrewID() {
+        return crewID;
     }
 
     public Location getDestination() {
@@ -43,12 +50,16 @@ public class Flight {
         return seatCapacity;
     }
 
-    public String getDepartureTime() {
+    public String getDepartureDate() {
         return departureTime;
     }
 
-    public String getArrivalTime() {
+    public String getArrivalDate() {
         return arrivalTime;
+    }
+
+    public Aircraft getAircraft() {
+        return aircraft;
     }
 
     // Setters
@@ -56,9 +67,13 @@ public class Flight {
         this.flightNumber = flightNumber;
     }
 
-    public void setAirline(Airline airline) {
-        this.airline = airline;
+    public String setCrewID(String crewID) {
+        this.crewID = crewID;
     }
+
+    // public void setAirline(Airline airline) {
+    //     this.airline = airline;
+    // }
 
     public void setDestination(Location destination) {
         this.destination = destination;
@@ -72,12 +87,16 @@ public class Flight {
         this.seatCapacity = seatCapacity;
     }
 
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureDate(String departureTime) {
         this.departureTime = departureTime;
     }
 
-    public void setArrivalTime(String arrivalTime) {
+    public void setArrivalDate(String arrivalTime) {
         this.arrivalTime = arrivalTime;
+    }
+
+    public Aircraft setAircraft(Aircraft aircraft) {
+        this.aircraft = aircraft;
     }
 
 }
