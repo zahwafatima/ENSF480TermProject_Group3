@@ -1,6 +1,6 @@
 package Controller;
 
-public class FlightController {
+public class AirlineUser {
     
     public void browse_passengers(){
         
