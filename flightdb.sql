@@ -10,7 +10,7 @@ CREATE TABLE AIRLINE (
 
 CREATE TABLE USERS (
     userID INT AUTO_INCREMENT,
-    roles VARCHAR(100),
+    isRegistered VARCHAR(50),
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     street VARCHAR(100),
@@ -19,6 +19,7 @@ CREATE TABLE USERS (
     email VARCHAR(100),
     pass VARCHAR(100),
     phoneNumber VARCHAR(100),
+    roles VARCHAR(100),
     PRIMARY KEY (userID)
 );
 
@@ -39,19 +40,26 @@ CREATE TABLE CREW (
     flightAttendant2 INT,
     flightAttendant3 INT,
     flightAttendant4 INT,
-    PRIMARY KEY (crewID)
+    PRIMARY KEY (crewID),
+    FOREIGN KEY (pilot) REFERENCES USERS(userID),
+    FOREIGN KEY (copilot) REFERENCES USERS(userID),
+    FOREIGN KEY (flightAttendant1) REFERENCES USERS(userID),
+    FOREIGN KEY (flightAttendant2) REFERENCES USERS(userID),
+    FOREIGN KEY (flightAttendant3) REFERENCES USERS(userID),
+    FOREIGN KEY (flightAttendant4) REFERENCES USERS(userID)
 );
 
 CREATE TABLE AIRCRAFT (
-    aircraftID INT AUTO_INCREMENT,
-    model VARCHAR(50) NOT NULL,
-    airline_name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (aircraftID),
-    FOREIGN KEY (airline_name) REFERENCES AIRLINE(airline_name)
+    aircraftID INT,
+    aircraftModel VARCHAR(50) NOT NULL,
+    capacity INT,
+    PRIMARY KEY (aircraftID)
+    #FOREIGN KEY (airline_name) REFERENCES AIRLINE(airline_name)
 );
 
 CREATE TABLE FLIGHT (
     flightNumber VARCHAR(5) NOT NULL,
+    crewID VARCHAR(10) NOT NULL,
     destination_country VARCHAR(20) NOT NULL,
     destination_city VARCHAR(20) NOT NULL,
     origin_country VARCHAR(20) NOT NULL,
@@ -59,12 +67,10 @@ CREATE TABLE FLIGHT (
     capacity INT NOT NULL,
     departureDate DATE,
     arrivalDate DATE,
-    crewID INT,
     aircraftID INT, 
     aircraftModel VARCHAR(20) NOT NULL, 
-    airline_name VARCHAR(255) NOT NULL,
+    
     PRIMARY KEY (flightNumber),
-    FOREIGN KEY (airline_name) REFERENCES AIRLINE(airline_name),
     FOREIGN KEY (crewID) REFERENCES CREW(crewID),
     FOREIGN KEY (aircraftID) REFERENCES AIRCRAFT(aircraftID),
     FOREIGN KEY (aircraftModel) REFERENCES AIRCRAFT(model)
@@ -96,21 +102,30 @@ CREATE TABLE TICKET (
 );
 
 
-
-
 -- Inserting data into USERS table
-INSERT INTO USERS (isRegistered, firstName, lastName, street, city, country, email, pass, phoneNumber)
+INSERT INTO USERS (userID, isRegistered, firstName, lastName, street, city, country, email, pass, phoneNumber, accessLevel)
 VALUES
-(true, 'John', 'Doe', '123 Main St', 'Cityville', 'Countryland', 'john.doe@example.com', 'password123', 1234567890),
-(true, 'Jane', 'Smith', '456 Oak St', 'Townsville', 'Countryland', 'jane.smith@example.com', 'pass456', 9876543210),
-(true, 'Alice', 'Johnson', '789 Pine St', 'Villagetown', 'Countryland', 'alice.johnson@example.com', 'secretPass', 5551234567),
-(false, 'Bob', 'Brown', '101 Maple St', 'Cityville', 'Countryland', 'bob.brown@example.com', 'password987', 3216549870),
-(false, 'Eva', 'Miller', '202 Elm St', 'Townsville', 'Countryland', 'eva.miller@example.com', 'pass789', 7894561230),
-(true, 'Michael', 'Davis', '303 Birch St', 'Villagetown', 'Countryland', 'michael.davis@example.com', 'myPassword', 6549873210),
-(false, 'Sophia', 'Anderson', '404 Cedar St', 'Cityville', 'Countryland', 'sophia.anderson@example.com', 'securePass', 4567890123),
-(false, 'Daniel', 'White', '505 Pine St', 'Townsville', 'Countryland', 'daniel.white@example.com', 'danielPass', 7890123456),
-(true, 'Olivia', 'Moore', '606 Oak St', 'Villagetown', 'Countryland', 'olivia.moore@example.com', 'oliviaPass', 1597534680),
-(false, 'James', 'Taylor', '707 Birch St', 'Cityville', 'Countryland', 'james.taylor@example.com', 'james123', 3571592468);
+(1, true, 'John', 'Doe', '123 Main St', 'Cityville', 'Countryland', 'john.doe@example.com', 'password123', 1234567890, "customer"),
+(2, true, 'Jane', 'Smith', '456 Oak St', 'Townsville', 'Countryland', 'jane.smith@example.com', 'pass456', 9876543210, "customer"),
+(3, true, 'Mike', 'Johnson', '789 Pine St', 'Villagetown', 'Countryland', 'alice.johnson@example.com', 'secretPass', 5551234567, "customer"),
+(4, false, 'Emily', 'Williams', '101 Maple St', 'Cityville', 'Countryland', 'bob.brown@example.com', 'password987', 3216549870, "customer"),
+(5, false, 'Chris', 'Brown', '202 Elm St', 'Townsville', 'Countryland', 'eva.miller@example.com', 'pass789', 7894561230, "customer"),
+(6, true, 'Sophia', 'Taylor', '303 Birch St', 'Villagetown', 'Countryland', 'michael.davis@example.com', 'myPassword', 6549873210, "customer"),
+(7, false, 'Daniel', 'Miller', '404 Cedar St', 'Cityville', 'Countryland', 'sophia.anderson@example.com', 'securePass', 4567890123, "customer"),
+(8, false, 'Olivia', 'Anderson', '505 Pine St', 'Townsville', 'Countryland', 'daniel.white@example.com', 'danielPass', 7890123456, "customer"),
+(9, true, 'Aiden', 'White', '606 Oak St', 'Villagetown', 'Countryland', 'olivia.moore@example.com', 'oliviaPass', 1597534680, "customer"),
+(10, false, 'James', 'Taylor', '707 Birch St', 'Cityville', 'Countryland', 'james.taylor@example.com', 'james123', 3571592468, "admin"),
+(11, false, 'Alice', 'Johnson', '123 Main St', 'Cityville', 'Countryland', 'alice.johnson@example.com', 'crewPass1', 1111111111, 'crew'),
+(12, false, 'Bob', 'Smith', '456 Oak St', 'Townsville', 'Countryland', 'bob.smith@example.com', 'crewPass2', 2222222222, 'crew'),
+(13, false, 'Charlie', 'Brown', '789 Pine St', 'Villagetown', 'Countryland', 'charlie.brown@example.com', 'crewPass3', 3333333333, 'crew'),
+(14, false, 'David', 'Miller', '101 Maple St', 'Cityville', 'Countryland', 'david.miller@example.com', 'crewPass4', 4444444444, 'crew'),
+(15, false, 'Eva', 'Williams', '202 Elm St', 'Townsville', 'Countryland', 'eva.williams@example.com', 'crewPass5', 5555555555, 'crew'),
+(16, false, 'Grace', 'Anderson', '303 Birch St', 'Villagetown', 'Countryland', 'grace.anderson@example.com', 'crewPass6', 6666666666, 'crew'),
+(17, false, 'Henry', 'Taylor', '404 Cedar St', 'Cityville', 'Countryland', 'henry.taylor@example.com', 'crewPass7', 7777777777, 'crew'),
+(18, false, 'Ivy', 'White', '505 Pine St', 'Townsville', 'Countryland', 'ivy.white@example.com', 'crewPass8', 8888888888, 'crew'),
+(19, false, 'Jack', 'Davis', '606 Oak St', 'Villagetown', 'Countryland', 'jack.davis@example.com', 'crewPass9', 9999999999, 'crew'),
+(20, false, 'Karen', 'Miller', '707 Birch St', 'Cityville', 'Countryland', 'karen.miller@example.com', 'crewPass10', 1010101010, 'crew');
+
 
 
 -- Inserting data into ADDRESS table. Delete? 
@@ -120,27 +135,37 @@ VALUES
 ('456 Main St', 'New York', 'USA', 2),
 ('789 Main St', 'New York', 'USA', 3);
 
--- Inserting flights
-INSERT INTO FLIGHT (flightNumber, airline, destination_Country, destination_city, origin_country, origin_city, capacity, departureDate, arrivalDate)
+-- Inserting aircrafts
+INSERT INTO AIRCRAFT (aircraftID, aircraftModel, capacity)
 VALUES
-('FL001', 'Delta', 'UK', 'London', 'USA', 'New York', 200, '2023-12-01', '2023-12-02'),
-('FL002', 'United', 'France', 'Paris', 'USA', 'Los Angeles', 180, '2023-12-05', '2023-12-06'),
-('FL003', 'Lufthansa', 'Japan', 'Tokyo', 'Germany', 'Berlin', 220, '2023-12-10', '2023-12-11'),
-('FL004', 'Emirates', 'UAE', 'Dubai', 'USA', 'New York', 250, '2023-12-15', '2023-12-16'),
-('FL005', 'British Airways', 'Italy', 'Rome', 'UK', 'London', 190, '2023-12-20', '2023-12-21'),
-('FL006', 'Qatar Airways', 'Australia', 'Sydney', 'Japan', 'Tokyo', 230, '2023-12-25', '2023-12-26');
+(5678, "A380", 200),
+(8934, "B737", 180),
+(1029, "B777", 220),
+(5985, "A350", 250),
+(8938, "B787", 190),
+(2398, "B77L", 230);
+
+-- Inserting flights
+INSERT INTO FLIGHT (flightNumber, crewID, destination_Country, destination_city, origin_country, origin_city, capacity, departureDate, arrivalDate, aircraftID, aircraftModel)
+VALUES
+('FL001', 'CR001', 'UK', 'London', 'USA', 'New York', 200, '2023-12-01', '2023-12-02', 5678, "A380"),
+('FL002', 'CR002', 'France', 'Paris', 'USA', 'Los Angeles', 180, '2023-12-05', '2023-12-06', 8934, "B737"),
+('FL003', 'CR003', 'Japan', 'Tokyo', 'Germany', 'Berlin', 220, '2023-12-10', '2023-12-11', 1029, "B777"),
+('FL004', 'CR004', 'UAE', 'Dubai', 'USA', 'New York', 250, '2023-12-15', '2023-12-16', 5985, "A350"),
+('FL005', 'CR005', 'Italy', 'Rome', 'UK', 'London', 190, '2023-12-20', '2023-12-21', 8938, "B787"),
+('FL006', 'CR006', 'Australia', 'Sydney', 'Japan', 'Tokyo', 230, '2023-12-25', '2023-12-26', 2398, "B77L");
 
 
 
 -- Inserting CREW data, 6 crew members per flight
 INSERT INTO CREW (crewID, pilot, copilot, flightAttendant1, flightAttendant2, flightAttendant3, flightAttendant4)
 VALUES
-('CR001', 'FL001', 'John Smith', 'Alice Johnson', 'Emily Davis', 'Michael Brown', 'Jessica Wilson', 'David Miller'),
-('CR002', 'FL002', 'Robert Anderson', 'Olivia Martinez', 'Daniel Taylor', 'Sophia Jackson', 'Ethan Moore', 'Ava White'),
-('CR003', 'FL003', 'William Davis', 'Emma Harris', 'Matthew Jones', 'Lily Anderson', 'Christopher Wilson', 'Grace Martin'),
-('CR004', 'FL004', 'James Taylor', 'Sophia Wilson', 'Andrew Moore', 'Olivia Harris', 'Samuel Jackson', 'Ava Davis'),
-('CR005', 'FL005', 'Ethan Brown', 'Ava Johnson', 'Michael Smith', 'Emily Martin', 'Daniel White', 'Sophia Taylor'),
-('CR006', 'FL006', 'Olivia White', 'Daniel Moore', 'Grace Anderson', 'David Taylor', 'Sophia Smith', 'Ethan Jackson');
+('CR001', 11, 12, 13, 14, 15, 16),
+('CR002', 17, 18, 19, 20, 13, 14),
+('CR003', 11, 18, 15, 16, 19, 20),
+('CR004', 12, 17, 14, 15, 16, 20),
+('CR005', 11, 17, 16, 19, 20, 14),
+('CR006', 12, 18, 14, 15, 16, 19);
 
 
 

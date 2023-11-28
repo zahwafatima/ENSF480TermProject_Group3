@@ -1,24 +1,31 @@
 package Entity;
 import java.util.Date;
 
-import Controller.Login;
+import controller.Login;
 
 
 public class User {
-    private Login login;
-    private Name name;
-    private Date dateOfBirth;
-    private String phoneNumber;
-    private Address address;
     private boolean isRegistered; 
+    private Name name;
+    private Address address;
+    private long phoneNumber;
+    private String email;
+    private String pass;
+    private String accessLevel;
+    private Login login;
+    
 
     // Constructor
-    public User(Login login, Name name, Date dateOfBirth, String phoneNumber, Address address) {
-        this.login = login;
+    public User(boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+        this.isRegistered = isRegistered;
         this.name = name;
-        this.dateOfBirth = dateOfBirth;
-        this.phoneNumber = phoneNumber;
         this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.pass = pass;
+        this.accessLevel = accessLevel;
+        login.addUser(email, pass);
+
     }
 
     // Getters and setters
