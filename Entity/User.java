@@ -5,6 +5,7 @@ import Controller.Login;
 
 
 public class User {
+    private int userID;
     private boolean isRegistered; 
     private Name name;
     private Address address;
@@ -14,6 +15,7 @@ public class User {
     private String accessLevel;
     
     public User(){
+        this.userID = 0;
         this.isRegistered = false;
         this.name = new Name("N/A", "N/A");
         this.address = new Address("N/A", "N/A", "N/A");
@@ -26,7 +28,8 @@ public class User {
     }
 
     // Constructor
-    public User(boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+    public User(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+        this.userID = userID;
         this.isRegistered = isRegistered;
         this.name = name;
         this.address = address;
@@ -40,6 +43,14 @@ public class User {
     }
 
     // Getters and setters
+
+    public int getUserID(){
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
    
     public boolean getIsRegistered(){
         return this.isRegistered;
