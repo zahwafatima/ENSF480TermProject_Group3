@@ -1,4 +1,5 @@
 import Controller.DatabaseConnection;
+import Controller.UserController;
 import Entity.Address;
 import Entity.Name;
 import Entity.Ticket;
@@ -16,9 +17,10 @@ public class GuestUser extends User{
     private DatabaseConnection db;
 
 
-    public GuestUser(boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
-        super(isRegistered, name, address, phoneNumber, email, pass, accessLevel);
+    public GuestUser(DatabaseConnection db, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+        super(db, isRegistered, name, address, phoneNumber, email, pass, accessLevel);
 
+        addUserToDB(this);
     }
 
     public UserController(DatabaseConnection db) {
@@ -34,7 +36,7 @@ public class GuestUser extends User{
             
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setBoolean(1, getIsRegistered());
-                preparedStatement.setInt(2, getUserId());  // Assuming you have a method to get the user ID
+                preparedStatement.setInt(2, getUserId()); 
     
                 int rowsAffected = preparedStatement.executeUpdate();
     
@@ -48,9 +50,6 @@ public class GuestUser extends User{
             e.printStackTrace();
         }
     }
-    
-
-
 
 }
 

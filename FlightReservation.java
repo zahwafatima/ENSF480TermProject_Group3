@@ -22,7 +22,8 @@ import Entity.Name;
 public class FlightReservation {
     public static void main(String[] args) {
         // Step 1: Create a DatabaseConnection instance
-        DatabaseConnection dbConnection = new DatabaseConnection.getOnlyInstance();
+        //EVERYONE: use the following like to send db to the controller classes
+        DatabaseConnection db = DatabaseConnection.getOnlyInstance();
 
         // Check if the database connection is successful
         if (dbConnection.getConnection() != null) {

@@ -13,6 +13,7 @@ import Entity.User;
     public class UserController {
     
         private DatabaseConnection db;
+        
     
         public UserController(DatabaseConnection db) {
             this.db = db;
