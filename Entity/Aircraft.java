@@ -21,12 +21,20 @@ public class Aircraft {
         return aircraftID;
     }
 
+    public String getAircraftModel() {
+        return model;
+    }
+
     public void setModel(String model) {
         this.model = model;
     }
 
     public void setAircraftID(int aircraftID) {
         this.aircraftID = aircraftID;
+    }
+
+    public void setAircraftModel(String model) {
+        this.model = model;
     }
 
     public int getCapacity() {

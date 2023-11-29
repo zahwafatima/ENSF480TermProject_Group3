@@ -46,7 +46,7 @@ public class Flight {
         return origin;
     }
 
-    public int getseatCapacity() {
+    public int getCapacity() {
         return seatCapacity;
     }
 
@@ -95,7 +95,7 @@ public class Flight {
         this.arrivalTime = arrivalTime;
     }
 
-    public Aircraft setAircraft(Aircraft aircraft) {
+    public void setAircraft(Aircraft aircraft) {
         this.aircraft = aircraft;
     }
 

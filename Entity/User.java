@@ -1,7 +1,7 @@
 package Entity;
 import java.util.Date;
 
-import controller.Login;
+import Controller.Login;
 
 
 public class User {
@@ -12,8 +12,18 @@ public class User {
     private String email;
     private String pass;
     private String accessLevel;
-    private Login login;
     
+    public User(){
+        this.isRegistered = false;
+        this.name = new Name("N/A", "N/A");
+        this.address = new Address("N/A", "N/A", "N/A");
+        this.phoneNumber = 0000000000;
+        this.email = "N/A";
+        this.pass = "N/A";
+        this.accessLevel = "N/A";
+        Login login = Login.getOnlyInstance();
+        login.addUser(email, pass);
+    }
 
     // Constructor
     public User(boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
@@ -24,22 +34,14 @@ public class User {
         this.email = email;
         this.pass = pass;
         this.accessLevel = accessLevel;
+        Login login = Login.getOnlyInstance();
         login.addUser(email, pass);
 
     }
 
-    public int calculatePayment(Ticket ticket){
-        return ticket.getPrice();
-    }
-
     // Getters and setters
-    public Login getLogin() {
-        return login;
-    }
+   
 
-    public void setLogin(Login login) {
-        this.login = login;
-    }
 
     public Name getName() {
         return name;
@@ -49,19 +51,21 @@ public class User {
         this.name = name;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getAccessLevel() {
+        return accessLevel;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setAccessLevel(String access) {
+        this.accessLevel = access;
     }
 
-    public String getPhoneNumber() {
+   
+
+    public long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
