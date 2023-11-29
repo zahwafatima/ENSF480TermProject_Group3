@@ -41,7 +41,13 @@ public class User {
 
     // Getters and setters
    
+    public boolean getIsRegistered(){
+        return this.isRegistered;
+    }
 
+    public void setIsRegistered(boolean isRegistered){
+        this.isRegistered = isRegistered;
+    }
 
     public Name getName() {
         return name;
