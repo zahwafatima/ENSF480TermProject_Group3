@@ -1,7 +1,9 @@
+package Boundary;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 public class BrowseFlightsPanel extends JPanel {
     private JList<String> flightsList;
@@ -28,10 +30,10 @@ public class BrowseFlightsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String selectedFlight = flightsList.getSelectedValue();
                 if (selectedFlight != null) {
-                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseFlightsPage.this),
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseFlightsPanel.this),
                             "You have booked " + selectedFlight);
                 } else {
-                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseFlightsPage.this),
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseFlightsPanel.this),
                             "Please select a flight to book.");
                 }
             }

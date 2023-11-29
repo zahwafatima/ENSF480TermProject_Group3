@@ -5,14 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String JDBC_URL = "jdbc:mysql://localhost/flightdb";
-    private static final String USERNAME = "flightReserve";
-    private static final String PASSWORD = "password";
+    private static final String JDBC_URL = "jdbc:mysql://localhost/flightdb1";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "shubham123";
 
     private static DatabaseConnection onlyInstance;
-    private Connection dbConnect;
+    public Connection dbConnect;
 
-    private DatabaseConnection() {
+    public DatabaseConnection() {
         createConnection();
     }
 

@@ -1,11 +1,13 @@
+package Boundary;
+import javax.swing.JPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignUpPanel extends Jpanel {
-    public SignupPanel(){
+public class SignUpPanel extends JPanel {
+    public SignUpPanel(){
         JPanel signUpPanel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -53,7 +55,7 @@ public class SignUpPanel extends Jpanel {
     
         // Back to Login button
         JButton backButton = new JButton("Back to Login");
-        backButton.addActionListener(e -> cardLayout.show(cardsPanel, LOGIN_CARD));
+        backButton.addActionListener(e -> AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Login Card"));
     
         // Adding buttons to the panel
         constraints.gridx = 0;

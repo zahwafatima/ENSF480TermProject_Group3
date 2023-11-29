@@ -1,13 +1,12 @@
+package Boundary;
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginPanel extends JPanel {
-    private CardLayout cardLayout;
-    private JPanel cardsPanel;
+ class LoginPanel extends JPanel {
+    
 
-    public LoginPanel(CardLayout cardLayout, JPanel cardsPanel) {
-        this.cardLayout = cardLayout;
-        this.cardsPanel = cardsPanel;
+    public LoginPanel() {
+        
 
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -25,7 +24,7 @@ public class LoginPanel extends JPanel {
 
         // Login button
         JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(e -> cardLayout.show(cardsPanel, "Browse Flights Card"));
+        loginButton.addActionListener(e -> AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Browse Flights Card"));
 
         // Adding components to the panel with constraints
         addComponent(this, constraints, userLabel, 0, 0);
@@ -36,7 +35,7 @@ public class LoginPanel extends JPanel {
 
         // Sign Up button
         JButton signUpButton = new JButton("Sign Up");
-        signUpButton.addActionListener(e -> cardLayout.show(cardsPanel, "Sign Up Card"));
+        signUpButton.addActionListener(e -> AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Sign-Up Card"));
         addComponent(this, constraints, signUpButton, 0, 3, 2, 1);
 
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Login Panel"));
