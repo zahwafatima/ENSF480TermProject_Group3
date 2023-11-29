@@ -1,4 +1,6 @@
-import controller.DatabaseConnection;
+import Controller.DatabaseConnection;
+import javax.swing.*;
+import Boundary.AirlineReservationSystem;
 
 public class FlightReservation{
     public static void main(String[] args) {
@@ -6,6 +8,10 @@ public class FlightReservation{
 
         if (dbConnection.dbConnect != null) {
             System.out.println("Connection to the database is successful!");
+            SwingUtilities.invokeLater(() -> {
+                AirlineReservationSystem frame = new AirlineReservationSystem();
+                frame.setVisible(true);
+            });
         } else {
             System.out.println("Failed to connect to the database. Check your connection details.");
         }
