@@ -1,4 +1,4 @@
-//package controller;
+package Controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,11 +9,11 @@ import java.util.Map;
 
 import Entity.Seat;
 import Entity.User;
-import DatabaseConnection;
 
     public class UserController {
     
         private DatabaseConnection db;
+        
     
         public UserController(DatabaseConnection db) {
             this.db = db;

@@ -1,10 +1,11 @@
 package Entity;
 import java.util.Date;
 
-import controller.Login;
+import Controller.Login;
 
 
 public class User {
+    private int userID;
     private boolean isRegistered; 
     private Name name;
     private Address address;
@@ -12,11 +13,23 @@ public class User {
     private String email;
     private String pass;
     private String accessLevel;
-    private Login login;
     
+    public User(){
+        this.userID = 0;
+        this.isRegistered = false;
+        this.name = new Name("N/A", "N/A");
+        this.address = new Address("N/A", "N/A", "N/A");
+        this.phoneNumber = 0000000000;
+        this.email = "N/A";
+        this.pass = "N/A";
+        this.accessLevel = "N/A";
+        Login login = Login.getOnlyInstance();
+        login.addUser(email, pass);
+    }
 
     // Constructor
-    public User(boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+    public User(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+        this.userID = userID;
         this.isRegistered = isRegistered;
         this.name = name;
         this.address = address;
@@ -24,21 +37,27 @@ public class User {
         this.email = email;
         this.pass = pass;
         this.accessLevel = accessLevel;
+        Login login = Login.getOnlyInstance();
         login.addUser(email, pass);
 
     }
 
-    public calculatePayment(Ticket ticket){
-        return ticket.getPrice();
-    }
-
     // Getters and setters
-    public Login getLogin() {
-        return login;
+
+    public int getUserID(){
+        return userID;
     }
 
-    public void setLogin(Login login) {
-        this.login = login;
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+   
+    public boolean getIsRegistered(){
+        return this.isRegistered;
+    }
+
+    public void setIsRegistered(boolean isRegistered){
+        this.isRegistered = isRegistered;
     }
 
     public Name getName() {
@@ -49,19 +68,21 @@ public class User {
         this.name = name;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getAccessLevel() {
+        return accessLevel;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setAccessLevel(String access) {
+        this.accessLevel = access;
     }
 
-    public String getPhoneNumber() {
+   
+
+    public long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

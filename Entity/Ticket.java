@@ -15,21 +15,25 @@ public class Ticket {
     private static final Map<Flight, Integer> flightPrices = new HashMap<>();
 
     // Constructor
-    public Ticket(String ticketNumber, Flight flight, User passenger, Seat seat, Seat ticketClass) {
+    public Ticket(String ticketNumber, Flight flight, User passenger, Seat seat) {
         this.ticketNumber = generateRandomTicketNumber();
-        this.flightNumber = flight;
+        this.flight = flight;
         this.passenger = passenger;
         this.seat = seat;
-        this.ticketClass = ticketClass;
 
         // Check if the flightNumber already has a price assigned
         if (!flightPrices.containsKey(flight)) {
             // If not, generate a new random price and associate it with the flightNumber
             Random random = new Random();
             int newPrice = random.nextInt(501) + 200;
+            if (seat.getSeatClass().equals("FirstClass")){
+                newPrice *= 1.4;
+            } else if(seat.getSeatClass().equals("BusinessClass")){
+                newPrice *= 2;
+            }
             flightPrices.put(flight, newPrice);
         }
-        this.price = flightPrices.get(flightNumber);
+        this.price = flightPrices.get(flight);
     }
 
     private String generateRandomTicketNumber() {
@@ -43,13 +47,12 @@ public class Ticket {
         return price;
     }
 
-
     public String getTicketNumber() {
         return ticketNumber;
     }
 
-    public Flight getFlightNumber() {
-        return flightNumber;
+    public Flight getFlight() {
+        return flight;
     }
 
     public User getPassenger() {
@@ -59,18 +62,10 @@ public class Ticket {
     public Seat getSeat() {
         return seat;
     }
-
-    public Seat getTicketClass() {
-        return ticketClass;
-    }
-
     // Setters
-    public void setTicketNumber(String ticketNumber) {
-        this.ticketNumber = ticketNumber;
-    }
 
-    public void setFlightNumber(Flight flightNumber) {
-        this.flightNumber = flightNumber;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public void setPassenger(User passenger) {
@@ -80,10 +75,5 @@ public class Ticket {
     public void setSeat(Seat seat) {
         this.seat = seat;
     }
-
-    public void setTicketClass(Seat ticketClass) {
-        this.ticketClass = ticketClass;
-    }
-
 
 }
