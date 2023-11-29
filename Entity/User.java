@@ -28,6 +28,10 @@ public class User {
 
     }
 
+    public calculatePayment(Ticket ticket){
+        return ticket.getPrice();
+    }
+
     // Getters and setters
     public Login getLogin() {
         return login;

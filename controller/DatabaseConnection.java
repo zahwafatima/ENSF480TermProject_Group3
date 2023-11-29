@@ -2,9 +2,7 @@ package Controller;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.*;
 
 public class DatabaseConnection {
     private static final String JDBC_URL = "jdbc:mysql://localhost/flightdb";
@@ -14,25 +12,27 @@ public class DatabaseConnection {
     private static DatabaseConnection onlyInstance;
     private Connection dbConnect;
 
-    private DatabaseConnection(){
-        createConnection(JDBC_URL, USERNAME, PASSWORD);
+    private DatabaseConnection() {
+        createConnection();
     }
 
-    public static DatabaseConnection getOnlyInstance(){
-        if (onlyInstance == null){
+    public static DatabaseConnection getOnlyInstance() {
+        if (onlyInstance == null) {
             onlyInstance = new DatabaseConnection();
         }
         return onlyInstance;
     }
 
-    public void createConnection(String link, String username, String password){
-        try{
-            dbConnect = DriverManager.getConnection(link, username, password);
+    private void createConnection() {
+        try {
+            dbConnect = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
         } catch (SQLException e) {
-            e.printStackTrace();
+            // Handle the exception appropriately (log it, throw it, etc.)
+            throw new RuntimeException("Failed to create a database connection", e);
         }
-
     }
 
+    public Connection getConnection() {
+        return dbConnect;
+    }
 }
-
