@@ -4,7 +4,6 @@ public class Seat {
     private String seatNumber;
     private String seatClass;
     private boolean isBooked;
-    private double price;
 
     // Constructor
     public Seat(String seatNumber, String seatClass, double price) {

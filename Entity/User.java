@@ -28,7 +28,7 @@ public class User {
 
     }
 
-    public calculatePayment(Ticket ticket){
+    public int calculatePayment(Ticket ticket){
         return ticket.getPrice();
     }
 
