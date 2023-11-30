@@ -1,15 +1,19 @@
 package Controller;
 import java.util.ArrayList;
 
+import Entity.User;
+
+
 public class Login {
     private ArrayList<String> emailList; //CHANGE to save to database instead of list 
     private ArrayList<String> passwordList;
+    private UserController userController;
 
     private static Login onlyInstance;
 
     private Login() {
-        emailList = new ArrayList<>();
-        passwordList = new ArrayList<>();
+        emailList = userController.emailList();
+        passwordList = userController.passwordList();
     }
 
     public static Login getOnlyInstance() {
@@ -19,9 +23,9 @@ public class Login {
         return onlyInstance;
     }
 
-    public void addUser(String email, String password) {
-        emailList.add(email); //CHANGE to save to database instead of list 
-        passwordList.add(password);
+    public void addUser(User user) {
+        emailList.add(user.getEmail());
+        passwordList.add(user.getPass());
     }
 
     public boolean isValidUser(String email, String password) { //CHANGE to save to database instead of list 
@@ -47,6 +51,20 @@ public class Login {
 
     public void setPasswordList(ArrayList<String> passwordList) {
         this.passwordList = passwordList;
+    }
+
+    public String getLastAddedEmail() {
+        if (!emailList.isEmpty()) {
+            return emailList.get(emailList.size() - 1);
+        }
+        return null; // Return null if the list is empty
+    }
+
+    public String getLastAddedPassword() {
+        if (!passwordList.isEmpty()) {
+            return passwordList.get(passwordList.size() - 1);
+        }
+        return null; // Return null if the list is empty
     }
 }
 

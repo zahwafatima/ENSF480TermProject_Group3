@@ -23,6 +23,8 @@ public class User {
     private String email;
     private String pass;
     private String accessLevel;
+    private UserController userController; 
+    private Login login = Login.getOnlyInstance();
     
     public User(){
         generateUserID();
@@ -33,9 +35,11 @@ public class User {
         this.email = "N/A";
         this.pass = "N/A";
         this.accessLevel = "N/A";
-        Login login = Login.getOnlyInstance();
-        login.addUser(email, pass);
-        addUserToDB(this);
+        
+        login.addUser(this);
+        userController.addUserToDB(this);
+
+        login.addUser(this); // Synchronize with Login class
 
     }
 
@@ -49,12 +53,11 @@ public class User {
         this.email = email;
         this.pass = pass;
         this.accessLevel = accessLevel;
+
         Login login = Login.getOnlyInstance();
-        login.addUser(email, pass);
-        addUserToDB(this);
-
+        login.addUser(this); // Synchronize with Login class
+        userController.addUserToDB(this);
     }
-
 
     private void generateUserID() {
         // Generate a new userID
@@ -84,10 +87,18 @@ public class User {
 
     public int calculatePayment(Ticket ticket){
         return ticket.getPrice();
-    }f
+    }
 
 
     // Getters and setters
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPass() {
+        return pass;
+    }
 
     public int getUserID(){
         return userID;

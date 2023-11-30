@@ -2,12 +2,10 @@ package Entity;
 
 public class Airline {
     private String name;
-    private AirlineController airlineController;
 
     // Constructor
-    public Airline(String name, AirlineController airlineController) {
+    public Airline(String name) {
         this.name = name;
-        this.airlineController = airlineController;
     }
 
     // Getter for name
@@ -20,13 +18,4 @@ public class Airline {
         this.name = name;
     }
 
-    // Getter for airlineController
-    public AirlineController getAirlineController() {
-        return airlineController;
-    }
-
-    // Setter for airlineController
-    public void setAirlineController(AirlineController airlineController) {
-        this.airlineController = airlineController;
-    }
 }

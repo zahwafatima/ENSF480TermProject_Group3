@@ -43,7 +43,7 @@ public class Ticket {
     }
 
     // Getters
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
