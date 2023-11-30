@@ -24,7 +24,6 @@ public class User {
     
     public User(){
         generateUserID();
-        this.userID = 0;
         this.isRegistered = false;
         this.name = new Name("N/A", "N/A");
         this.address = new Address("N/A", "N/A", "N/A");
@@ -39,7 +38,6 @@ public class User {
     // Constructor
     public User(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
         generateUserID();
-        this.userID = userID;
         this.isRegistered = isRegistered;
         this.name = name;
         this.address = address;
