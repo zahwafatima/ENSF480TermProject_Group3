@@ -42,26 +42,8 @@ public class FlightReservation {
 
         // Check if the database connection is successful
         if (connection != null) {
-            // Step 2: Create a UserController instance
-            UserController userController = new UserController(connection);
 
-            // Step 3: Test the addUserToDB method with a new User
-            User newUser = new User(); // This will use the default constructor to create a new user
-            // Set other details for the user if needed
-            newUser.getName().setFirstName("John");
-            newUser.getName().setLastName("Doe");
-            newUser.getAddress().setStreet("123 Main St");
-            newUser.getAddress().setCity("Cityville");
-            newUser.getAddress().setCountry("Countryland");
-            newUser.setPhoneNumber(1234567890);
-            newUser.setAccessLevel("customer");
-
-            // Add the user to the database
-            userController.addUserToDB(newUser);
-
-            // Step 4: Test other UserController methods if needed
-            // For example, you can test browseSeatMap or getUserAccessLevel
-
+            // add tests here 
         } else {
             System.out.println("Failed to connect to the database. Check your connection details.");
         }
