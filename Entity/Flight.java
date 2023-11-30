@@ -67,7 +67,7 @@ public class Flight {
         this.flightNumber = flightNumber;
     }
 
-    public String setCrewID(String crewID) {
+    public void setCrewID(String crewID) {
         this.crewID = crewID;
     }
 

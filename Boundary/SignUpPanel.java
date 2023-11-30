@@ -1,19 +1,17 @@
 package Boundary;
-
 import javax.swing.*;
-
 import Entity.Address;
 import Entity.User;
 import Entity.Name;
 import Controller.UserController;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class SignUpPanel extends JPanel {
     private UserController usc;
-    private 
-    public SignUpPanel() {
+    
+    public SignUpPanel(UserController usc) {
+        this.usc = usc;
         //usc = 
         
         setLayout(new GridBagLayout());

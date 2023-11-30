@@ -1,6 +1,9 @@
 package Boundary;
 //import Boundary.LoginPanel;
 import javax.swing.*;
+
+import Controller.UserController;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +21,7 @@ public class AirlineReservationSystem extends JFrame {
     private final String CHECKOUT_CARD = "Checkout Card";
 
     public AirlineReservationSystem(UserController usc) {
-        thus.usc = usc;
+        this.usc = usc;
         cardLayout = new CardLayout();
         cardsPanel = new JPanel(cardLayout);
 
@@ -47,9 +50,9 @@ public class AirlineReservationSystem extends JFrame {
     //     return loginPanel;
     // }
     
-    private JPanel createSignUpPanel() {
+    private JPanel createSignUpPanel(UserController usc) {
         // Assuming SignUpPanel has a constructor that takes no arguments
-        return new SignUpPanel();
+        return new SignUpPanel(usc);
     }
     
     private JPanel createBrowseFlightsPanel() {
