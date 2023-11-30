@@ -27,7 +27,7 @@ public class User {
     private Login login = Login.getOnlyInstance();
     
     public User(){
-        generateUserID();
+        this.userID =generateUserID();
         this.isRegistered = false;
         this.name = new Name("N/A", "N/A");
         this.address = new Address("N/A", "N/A", "N/A");
@@ -44,8 +44,8 @@ public class User {
     }
 
     // Constructor
-    public User(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
-        generateUserID();
+    public User( boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+        this.userID = generateUserID();
         this.isRegistered = isRegistered;
         this.name = name;
         this.address = address;
@@ -59,7 +59,7 @@ public class User {
         userController.addUserToDB(this);
     }
 
-    private void generateUserID() {
+    private int generateUserID() {
         // Generate a new userID
         try (Connection connection = dbConnection.getConnection()) {
             do {
@@ -69,6 +69,7 @@ public class User {
         } catch (SQLException e) {
             e.printStackTrace(); 
         }
+        return userID;
     }
 
     private boolean userIDExists(Connection connection, int userID) throws SQLException {
