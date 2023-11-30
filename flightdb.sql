@@ -9,7 +9,7 @@ CREATE TABLE AIRLINE (
 );
 
 CREATE TABLE USERS (
-    userID INT AUTO_INCREMENT,
+    userID INT,
     isRegistered BOOLEAN,
     firstName VARCHAR(50),
     lastName VARCHAR(50),

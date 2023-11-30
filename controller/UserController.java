@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +12,7 @@ import Entity.User;
 
     public class UserController {
     
-        private DatabaseConnection db;
+        private static DatabaseConnection db;
         
     
         public UserController(DatabaseConnection db) {
@@ -21,20 +21,22 @@ import Entity.User;
         //add a new user to the database 
         public void addUserToDB(User user) {
             try (Connection connection = db.getConnection()) {
-                String sql = "INSERT INTO FLIGHTDB.USERS (isRegistered, firstName, lastName, street, city, country, email, pass, phoneNumber, accessLevel) " +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO FLIGHTDB.USERS (userID, isRegistered, firstName, lastName, street, city, country, email, pass, phoneNumber, accessLevel) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 
                 try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                    preparedStatement.setString(1, "Yes"); // Assuming isRegistered should be set to "Yes" for a new user
-                    preparedStatement.setString(2, user.getName().getFirstName());
-                    preparedStatement.setString(3, user.getName().getLastName());
-                    preparedStatement.setString(4, user.getAddress().getStreet());
-                    preparedStatement.setString(5, user.getAddress().getCity());
-                    preparedStatement.setString(6, user.getAddress().getCountry());
-                    preparedStatement.setString(7, user.getLogin().getEmail());
-                    preparedStatement.setString(8, user.getLogin().getPassword());
-                    preparedStatement.setString(9, String.valueOf(user.getPhoneNumber()));
-                    preparedStatement.setString(10, user.getAccessLevel());
+
+                    preparedStatement.setString(1, String.valueOf(user.getUserID())); 
+                    preparedStatement.setString(2, String.valueOf(user.getIsRegistered())); 
+                    preparedStatement.setString(3, user.getName().getFirstName());
+                    preparedStatement.setString(4, user.getName().getLastName());
+                    preparedStatement.setString(5, user.getAddress().getStreet());
+                    preparedStatement.setString(6, user.getAddress().getCity());
+                    preparedStatement.setString(7, user.getAddress().getCountry());
+                    preparedStatement.setString(8, user.getLogin().getEmail());
+                    preparedStatement.setString(9, user.getLogin().getPassword());
+                    preparedStatement.setString(10, String.valueOf(user.getPhoneNumber()));
+                    preparedStatement.setString(11, ("customer")); 
     
                     int rowsAffected = preparedStatement.executeUpdate();
     

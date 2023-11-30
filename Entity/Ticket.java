@@ -26,9 +26,9 @@ public class Ticket {
             // If not, generate a new random price and associate it with the flightNumber
             Random random = new Random();
             int newPrice = random.nextInt(501) + 200;
-            if (seat.getSeatClass().equals("FirstClass")){
+            if (seat.getSeatClass().equals("First Class")){
                 newPrice *= 1.4;
-            } else if(seat.getSeatClass().equals("BusinessClass")){
+            } else if(seat.getSeatClass().equals("Business Class")){
                 newPrice *= 2;
             }
             flightPrices.put(flight, newPrice);

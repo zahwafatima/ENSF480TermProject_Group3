@@ -1,10 +1,18 @@
 package Entity;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
+import Controller.DatabaseConnection;
 import Controller.Login;
 
 
 public class User {
+
+    DatabaseConnection dbConnection = DatabaseConnection.getOnlyInstance();
+
     private int userID;
     private boolean isRegistered; 
     private Name name;
@@ -15,6 +23,7 @@ public class User {
     private String accessLevel;
     
     public User(){
+        generateUserID();
         this.userID = 0;
         this.isRegistered = false;
         this.name = new Name("N/A", "N/A");
@@ -29,6 +38,7 @@ public class User {
 
     // Constructor
     public User(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+        generateUserID();
         this.userID = userID;
         this.isRegistered = isRegistered;
         this.name = name;
@@ -41,6 +51,34 @@ public class User {
         login.addUser(email, pass);
 
     }
+
+
+    private void generateUserID() {
+        // Generate a new userID
+        try (Connection connection = dbConnection.getConnection()) {
+            do {
+                Random random = new Random();
+                userID =  1000 + random.nextInt(9000); // Generates a random 4-digit number
+                } while (userIDExists(connection, userID));
+        } catch (SQLException e) {
+            e.printStackTrace(); 
+        }
+    }
+
+    private boolean userIDExists(Connection connection, int userID) throws SQLException {
+    // Check if userID already exists in the database
+        String query = "SELECT COUNT(*) FROM FLIGHTDB.USERS WHERE userID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userID);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0;
+                }
+            }
+    }
+    return false;
+    }
+
 
     // Getters and setters
 
