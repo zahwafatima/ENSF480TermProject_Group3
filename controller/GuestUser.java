@@ -18,10 +18,13 @@ public class GuestUser extends User{
     private DatabaseConnection db;
 
     public GuestUser(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
-        super(isRegistered, name, address, phoneNumber, email, pass, accessLevel);
+        super(userID, isRegistered, name, address, phoneNumber, email, pass, accessLevel);
 
         this.db = DatabaseConnection.getOnlyInstance();
-        addUserToDB(this);
+    }
+
+    public UserController(DatabaseConnection db) {
+        this.db = db;
     }
 
     public void subscribeToMembership() {

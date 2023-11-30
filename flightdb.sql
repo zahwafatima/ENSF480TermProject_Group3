@@ -110,7 +110,13 @@ CREATE TABLE TICKET (
 );
 
 
-
+CREATE TABLE PROMOS(
+    promoID INT; 
+    discountPrecent INT; 
+    promoDateStart DATE;
+    promoDateEnd DATE;
+    PRMARY KEY (promoID);
+);
 
 -- Inserting data into USERS table
 INSERT INTO USERS (userID, isRegistered, firstName, lastName, street, city, country, email, pass, phoneNumber, accessLevel)
@@ -391,31 +397,16 @@ VALUES
 ('T007', 'FL001', 'Daniel', 'Miller', '16A', 'Economy Class', 7),
 ('T008', 'FL001', 'Olivia', 'Anderson', '16B', 'Economy Class', 8),
 ('T009', 'FL001', 'Aiden', 'White', '16C', 'Economy Class', 9);
--- ('T010', 'FL001', '', '', '7A', 'Economy Class', NULL),
--- ('T011', 'FL001', '', '', '7B', 'Economy Class', NULL),
--- ('T012', 'FL001', '', '', '7C', 'Economy Class', NULL),
--- ('T013', 'FL001', '', '', '18A', 'Business Class', NULL),
--- ('T014', 'FL001', '', '', '18B', 'Business Class', NULL),
--- ('T015', 'FL001', '', '', '18C', 'Business Class', NULL),
--- ('T016', 'FL001', '', '', '29A', 'Economy Class', NULL),
--- ('T017', 'FL001', '', '', '29B', 'Economy Class', NULL),
--- ('T018', 'FL001', '', '', '29C', 'Economy Class', NULL),
--- ('T019', 'FL001', '', '', '10A', 'Business Class', NULL),
--- ('T020', 'FL001', '', '', '10B', 'Business Class', NULL),
--- ('T021', 'FL001', '', '', '10C', 'Business Class', NULL),
--- ('T022', 'FL001', '', '', '20A', 'Business Class', NULL),
--- ('T023', 'FL001', '', '', '20B', 'Business Class', NULL),
--- ('T024', 'FL001', '', '', '20C', 'Business Class', NULL),
--- ('T025', 'FL001', '', '', '3A', 'First Class', NULL),
--- ('T026', 'FL001', '', '', '13B', 'Business Class', NULL),
--- ('T027', 'FL001', '', '', '23C', 'Economy Class', NULL),
--- ('T028', 'FL001', '', '', '14C', 'Business Class', NULL),
--- ('T029', 'FL001', '', '', '25A', 'Economy Class', NULL),
--- ('T030', 'FL001', '', '', '15C', 'Business Class', NULL);
+
+INSERT INTO PROMOS (promoID, discountPrecent, promoDateStart, promoDateEnd)
+VALUES
+    (1001, 15, '2023-11-05', '2023-12-05'),
+    (1002, 25, '2023-11-10', '2023-12-10'),
+    (1003, 30, '2023-11-15', '2023-12-15'),
+    (1004, 10, '2023-11-20', '2023-12-20'),
+    (1005, 5, '2023-11-25', '2023-12-25');
 
 
-
--- Add more entries as needed
 ;
 
 

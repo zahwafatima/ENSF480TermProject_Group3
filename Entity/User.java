@@ -4,9 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Random;
 
 import Controller.DatabaseConnection;
 import Controller.Login;
+import Controller.UserController;
 
 
 public class User {
@@ -33,6 +35,8 @@ public class User {
         this.accessLevel = "N/A";
         Login login = Login.getOnlyInstance();
         login.addUser(email, pass);
+        addUserToDB(this);
+
     }
 
     // Constructor
@@ -47,6 +51,7 @@ public class User {
         this.accessLevel = accessLevel;
         Login login = Login.getOnlyInstance();
         login.addUser(email, pass);
+        addUserToDB(this);
 
     }
 
@@ -76,6 +81,10 @@ public class User {
     }
     return false;
     }
+
+    public int calculatePayment(Ticket ticket){
+        return ticket.getPrice();
+    }f
 
 
     // Getters and setters
@@ -111,8 +120,6 @@ public class User {
     public void setAccessLevel(String access) {
         this.accessLevel = access;
     }
-
-   
 
     public long getPhoneNumber() {
         return phoneNumber;
