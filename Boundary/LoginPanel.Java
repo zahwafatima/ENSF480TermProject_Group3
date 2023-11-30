@@ -1,6 +1,9 @@
 package Boundary;
 import javax.swing.*;
 import java.awt.*;
+import Controller.Login;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
  class LoginPanel extends JPanel {
     
@@ -16,16 +19,41 @@ import java.awt.*;
 
         // Username label and text field
         JLabel userLabel = new JLabel("Username:");
-        JTextField userTextField = new JTextField(15);
+        JTextField userTextField = new JTextField(25);
 
         // Password label and password field
         JLabel passwordLabel = new JLabel("Password:");
         JPasswordField passwordField = new JPasswordField(15);
 
         // Login button
-        JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(e -> AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Browse Flights Card"));
-
+        JButton loginButton = new JButton("nogin");
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = userTextField.getText();
+                char[] password = passwordField.getPassword();
+                String passwordString = new String(password);
+                System.out.println(username + "" + passwordString);
+                if (isValidUser(username, passwordString)== true) {
+                    JOptionPane.showMessageDialog(null, "Welcome" );
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                }});
+        //  {
+        
+        
+            
+        //         // If valid, show welcome message
+        //         JOptionPane.showMessageDialog(null, "Welcome, " + username + "!");
+        //         // Navigate to the next card
+        //         //AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Browse Flights Card");
+        //     } else {
+        //         // If not valid, show error message
+        //         JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+        //     }
+        // }
         // Adding components to the panel with constraints
         addComponent(this, constraints, userLabel, 0, 0);
         addComponent(this, constraints, userTextField, 1, 0);
@@ -54,4 +82,14 @@ import java.awt.*;
                               Component component, int x, int y) {
         addComponent(panel, constraints, component, x, y, 1, 1);
     }
+    private boolean isValidUser(String username,String passwordString){
+        Login login = Login.getOnlyInstance();
+        login.printUsernameList(login.getEmailList());
+        //System.out.println("user");
+         return login.isValidUser(username,passwordString);
+    }
+    // private String isValidUser(String username,String passwordString){
+    //     Login login = Login.getOnlyInstance();
+    //     login.isValidUser(username,passwordString);
+    // }
 }

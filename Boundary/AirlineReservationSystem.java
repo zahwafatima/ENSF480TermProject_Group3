@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AirlineReservationSystem extends JFrame {
-
+    private UserController usc;
     static CardLayout cardLayout;
      static JPanel cardsPanel; // This will contain all the "pages"
     private final String LOGIN_CARD = "Login Card";
@@ -17,18 +17,19 @@ public class AirlineReservationSystem extends JFrame {
     private final String SEAT_MAP_CARD = "Seat Map Card";
     private final String CHECKOUT_CARD = "Checkout Card";
 
-    public AirlineReservationSystem() {
+    public AirlineReservationSystem(UserController usc) {
+        thus.usc = usc;
         cardLayout = new CardLayout();
         cardsPanel = new JPanel(cardLayout);
 
         // Create the card panels.
         JPanel loginPanel = new LoginPanel();
         // Add the cards to the cardsPanel
-       // cardsPanel.add(createLoginPanel(), LOGIN_CARD);
-        cardsPanel.add(loginPanel, SIGNUP_CARD);
-        cardsPanel.add(createBrowseFlightsPanel(), BROWSE_FLIGHTS_CARD);
-        cardsPanel.add(createSeatMapPanel(), SEAT_MAP_CARD);
-        cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
+        cardsPanel.add(loginPanel, LOGIN_CARD);
+         cardsPanel.add(createSignUpPanel(usc), SIGNUP_CARD);
+        // cardsPanel.add(createBrowseFlightsPanel(), BROWSE_FLIGHTS_CARD);
+        // cardsPanel.add(createSeatMapPanel(), SEAT_MAP_CARD);
+        // cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
 
         // Show the initial card.
         cardLayout.show(cardsPanel, LOGIN_CARD);
