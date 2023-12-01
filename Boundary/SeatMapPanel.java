@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SeatMapPanel extends JPanel {
-    private Map<String, JButton> seatButtons;
+    private Map<Seat, JButton> seatButtons;
     private final int rows = 10; // number of rows
     private final char[] sides = {'A', 'B', 'C', 'D', 'E', 'F'}; // Seat letters
-
+    // flight object 
     public SeatMapPanel() {
         setLayout(new GridLayout(0, 4, 10, 10)); // 4 columns to simulate a typical narrow-body aircraft with a single aisle, with space for the aisle
 

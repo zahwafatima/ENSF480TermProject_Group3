@@ -10,8 +10,9 @@ public class FlightReservation {
         // Step 1: Create a DatabaseConnection instance
         DatabaseConnection db = DatabaseConnection.getOnlyInstance();
         Connection connection = db.getConnection();
-        UserController usc = new UserController(connection);
+        UserController usc = new UserController();
         if (connection != null) {
+            
             System.out.println("Connection to the database is successful!");
             SwingUtilities.invokeLater(() -> {
                 AirlineReservationSystem frame = new AirlineReservationSystem(usc);

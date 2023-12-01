@@ -37,14 +37,14 @@ public class User {
         this.accessLevel = "N/A";
         
         login.addUser(this);
-        userController.addUserToDB(this);
+        //userController.addUserToDB(this);
 
         login.addUser(this); // Synchronize with Login class
 
     }
 
     // Constructor
-    public User( boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+    public User(boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
         this.userID = generateUserID();
         this.isRegistered = isRegistered;
         this.name = name;
@@ -56,19 +56,19 @@ public class User {
 
         Login login = Login.getOnlyInstance();
         login.addUser(this); // Synchronize with Login class
-        userController.addUserToDB(this);
+        //userController.addUserToDB(this);
     }
 
-    private int generateUserID() {
+    private int generateUserID(){
         // Generate a new userID
-        try (Connection connection = dbConnection.getConnection()) {
-            do {
-                Random random = new Random();
-                userID =  1000 + random.nextInt(9000); // Generates a random 4-digit number
-                } while (userIDExists(connection, userID));
-        } catch (SQLException e) {
-            e.printStackTrace(); 
+        try {do {
+            Random random = new Random();
+            userID =  1000 + random.nextInt(9000); // Generates a random 4-digit number
+            } while (userIDExists(DatabaseConnection.dbConnect, userID));
+        }catch (SQLException e) {
+            
         }
+    
         return userID;
     }
 

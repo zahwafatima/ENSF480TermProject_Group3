@@ -36,6 +36,7 @@ import java.awt.event.ActionListener;
                 System.out.println(username + "" + passwordString);
                 if (isValidUser(username, passwordString)== true) {
                     JOptionPane.showMessageDialog(null, "Welcome" );
+                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Browse Flights Card");
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
@@ -84,7 +85,7 @@ import java.awt.event.ActionListener;
     }
     private boolean isValidUser(String username,String passwordString){
         Login login = Login.getOnlyInstance();
-        login.printUsernameList(login.getEmailList());
+        //login.printUsernameList(login.getEmailList());
         //System.out.println("user");
          return login.isValidUser(username,passwordString);
     }

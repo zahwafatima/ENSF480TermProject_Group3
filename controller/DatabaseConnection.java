@@ -10,7 +10,7 @@ public class DatabaseConnection {
     private static final String PASSWORD = "shubham123";
 
     private static DatabaseConnection onlyInstance;
-    public Connection dbConnect;
+    public static Connection dbConnect;
 
     public DatabaseConnection() {
         createConnection();

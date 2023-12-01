@@ -96,14 +96,14 @@ public class SignUpPanel extends JPanel {
         constraints.gridy++;
         constraints.gridwidth = 2;
         JCheckBox isRegisteredCheckbox = new JCheckBox("Register as a user (uncheck for guest)");
-        
+        isRegisteredCheckbox.setSelected(true);
+            add(isRegisteredCheckbox, constraints);
         // Submit button
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             // Here, you would handle the submission logic
             // For example, you could create a new User instance and save it to the database
-            isRegisteredCheckbox.setSelected(true);
-            add(isRegisteredCheckbox, constraints);
+            
             boolean isRegistered = isRegisteredCheckbox.isSelected();
             String email = emailField.getText();
             String password = new String(passwordField.getPassword());
@@ -115,9 +115,13 @@ public class SignUpPanel extends JPanel {
             String street = streetField.getText();
             long phoneNumber = Long.parseLong(phoneNumberField.getText());
             String accessLevel = "user";
+            System.out.print("testtt11");
             Name name = new Name(firstName,lastName);
+            System.out.print("testtt11111111");
             Address addr = new Address(street, city, country);
+            System.out.print("testtt11222222");
             User user  = new User(isRegistered,name,addr, phoneNumber,email,password,accessLevel);
+            System.out.print("testtt113333");
             addUsertoDB(user);
             System.out.print("testtt");
             // Create other components of User f    rom the fields...

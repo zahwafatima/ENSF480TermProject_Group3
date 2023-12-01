@@ -6,6 +6,10 @@ public class Aircraft {
     private int capacity;
 
     // Constructor
+    public Aircraft(int aircraftID) {
+        this.aircraftID = aircraftID;
+    
+    }
     public Aircraft(int aircraftID, String model, int capacity) {
         this.aircraftID = aircraftID;
         this.model = model;

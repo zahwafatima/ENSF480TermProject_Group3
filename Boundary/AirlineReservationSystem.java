@@ -30,7 +30,7 @@ public class AirlineReservationSystem extends JFrame {
         // Add the cards to the cardsPanel
         cardsPanel.add(loginPanel, LOGIN_CARD);
          cardsPanel.add(createSignUpPanel(usc), SIGNUP_CARD);
-        // cardsPanel.add(createBrowseFlightsPanel(), BROWSE_FLIGHTS_CARD);
+         cardsPanel.add(createBrowseFlightsPanel(), BROWSE_FLIGHTS_CARD);
         // cardsPanel.add(createSeatMapPanel(), SEAT_MAP_CARD);
         // cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
 
@@ -56,7 +56,7 @@ public class AirlineReservationSystem extends JFrame {
     }
     
     private JPanel createBrowseFlightsPanel() {
-        return new BrowseFlightsPanel();
+        return new BrowseFlightsPanel(usc);
     }
     
     private JPanel createSeatMapPanel() {

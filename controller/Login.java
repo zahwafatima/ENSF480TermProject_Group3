@@ -1,17 +1,18 @@
 package Controller;
 import java.util.ArrayList;
-
+import java.sql.*;
 import Entity.User;
+
 
 
 public class Login {
     private ArrayList<String> emailList; //CHANGE to save to database instead of list 
     private ArrayList<String> passwordList;
     private UserController userController;
-
     private static Login onlyInstance;
 
     private Login() {
+        this.userController  = new UserController();
         emailList = userController.emailList();
         passwordList = userController.passwordList();
     }
