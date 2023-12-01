@@ -66,72 +66,46 @@ public class UserController {
 
         }
     }
-    public String getDate(){
-        Date date = new Date();  
-     SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-DD");  
-    //  String strDate = formatter.format(date);  
-    //test date
-     String strDate = ("2023-12-01");
-      return strDate;
-    }
-    public Map<String, Flight> browseFlightsByDate (String date){
+    // Browse all flights in the table, regardless of the date.
+    public Map<String, Flight> browseAllFlights() {
         Map<String, Flight> flightsMap = new HashMap<>();
 
-        // Check if the date has the proper format "YYYY-MM-DD"
-        if (!isValidDateFormat(date)) {
-            System.out.println("Invalid date format. Please use 'YYYY-MM-DD'.");
-            return flightsMap;
-        }
-        // try (Connection connection = db.getConnection()) {
-            // SQL query to retrieve flights based on departureDate
-            String query = "SELECT * FROM FLIGHTDB.FLIGHT WHERE departureDate = ?";
+        String query = "SELECT * FROM FLIGHTDB.FLIGHT";
 
-            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
-                // Set the value for the placeholder in the query
-                preparedStatement.setString(1, date);
+        try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery()) {
+            // Process the result set
+            while (resultSet.next()) {
+                // Retrieve data from the result set and create Flight objects
+                String flightNumber = resultSet.getString("flightNumber");
+                String crewID = resultSet.getString("crewID");
+                String destCountry = resultSet.getString("destination_country");
+                String destCity = resultSet.getString("destination_city");
+                String originCountry = resultSet.getString("origin_country");
+                String originCity = resultSet.getString("origin_city");
+                int capacity = resultSet.getInt("capacity");
+                String departureDate = resultSet.getString("departureDate");
+                String arrivalDate = resultSet.getString("arrivalDate");
+                int aircraftID = resultSet.getInt("aircraftID");
+                String aircraftModel = resultSet.getString("aircraftModel");
 
-                // Execute the query
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    // Process the result set
-                    while (resultSet.next()) {
-                        // Retrieve data from the result set and create Flight objects
-                        String flightNumber = resultSet.getString("flightNumber");
-                        String crewID = resultSet.getString("crewID");
-                        String destCountry = resultSet.getString("destination_country");
-                        String destCity = resultSet.getString("destination_city");
-                        String originCountry = resultSet.getString("origin_country");
-                        String originCity = resultSet.getString("origin_city");
-                        int capacity = resultSet.getInt("capacity");
-                        String departureDate = resultSet.getString("departureDate");
-                        String arrivalDate = resultSet.getString("arrivalDate");
-                        int aircraftID = resultSet.getInt("aircraftID");
+                // Create a Flight object and add it to the HashMap
+                Flight flight = new Flight(flightNumber, crewID,
+                        new Location(destCity, destCountry),
+                        new Location(originCity, originCountry),
+                        capacity, departureDate, arrivalDate,
+                        new Aircraft(aircraftID, aircraftModel, capacity));
 
-                        // Retrieve additional details for the aircraft using the aircraftID
-                        //Aircraft aircraft = getAircraftDetails();
-                        Aircraft aircraft = new Aircraft(aircraftID);
-                        
-                        // Create a Flight object and add it to the HashMap
-                        Flight flight = new Flight(flightNumber, crewID,
-                                new Location(destCity, destCountry),
-                                new Location(originCity, originCountry),
-                                capacity, departureDate, arrivalDate,
-                                aircraft);
-
-                        flightsMap.put(flightNumber, flight);
-                    }
-                }
-        
+                flightsMap.put(flightNumber, flight);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle exceptions as needed
-        } 
+            System.err.println("Error retrieving flights from the database: " + e.getMessage());
+        }
 
         return flightsMap;
     }
-    private boolean isValidDateFormat(String date) {
-        String regex = "\\d{4}-\\d{2}-\\d{2}";
-        return date.matches(regex);
-    }
+
 
     //returns a map of all of the seats associated with an aircraft 
     public Map<String, Seat> browseSeatMap() {

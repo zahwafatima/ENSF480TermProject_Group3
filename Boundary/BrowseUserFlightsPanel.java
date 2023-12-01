@@ -11,17 +11,69 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import javax.swing.table.DefaultTableModel;
 
+import Boundary.BrowseAdminFlightsPanel;
 
 public class BrowseUserFlightsPanel extends JPanel {
-    private JList<String> flightsList;
     private JButton bookButton;
     private JButton refreshButton;
     private UserController usc;
-    static Flight selectedFlight;
+    
 
     public BrowseUserFlightsPanel(UserController usc) {
         setLayout(new BorderLayout());
         this.usc = usc;
+        System.out.println("hi1");
+        Map<String, Flight> flightMap = usc.browseAllFlights();
 
+        String[] columnNames = {
+            "Flight Number",
+            "Destination City",
+            "Origin City",
+        };        
+
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        JTable flightTable = new JTable(model);
+
+        for (Flight flight : flightMap.values()) {
+            Object[] row = new Object[]{
+                flight.getFlightNumber(),
+                flight.getDestination().getCity(),
+                flight.getOrigin().getCity(),
+            };
+            model.addRow(row);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(flightTable);
+        add(scrollPane, BorderLayout.CENTER);
+
+        bookButton = new JButton("Book Selected Flight");
+        bookButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = flightTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    String selectedFlight = (String) flightTable.getValueAt(selectedRow, 0);
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseUserFlightsPanel.this),
+                            "You have booked " + selectedFlight);
+                            // Implement your logic for booking the flight here
+                } else {
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseUserFlightsPanel.this),
+                            "Please select a flight to book.");
+                }
+            }
+        });
+
+        refreshButton = new JButton("Refresh Flights");
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implement logic to refresh the list of flights
+            }
+        });
+
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.add(refreshButton);
+        buttonsPanel.add(bookButton);
+        add(buttonsPanel, BorderLayout.SOUTH);
     }
 }

@@ -18,58 +18,58 @@ public class BrowseAdminFlightsPanel extends JPanel {
     private UserController usc;
     static Flight selectedFlight;
 
-    public BrowseAdminFlightsPanel(UserController usc) {
-        setLayout(new BorderLayout());
-        this.usc = usc;
+     public BrowseAdminFlightsPanel(UserController usc) {
+    //     setLayout(new BorderLayout());
+    //     this.usc = usc;
 
-        Map<String, Flight> flightMap = usc.browseFlightsByDate(usc.getDate());
-        // Dummy data for flights
-        String[] columnNames = {"Flight Number", "Destination", "Departure Date"};
+    //     Map<String, Flight> flightMap = usc.browseFlightsByDate(usc);
+    //     // Dummy data for flights
+    //     String[] columnNames = {"Flight Number", "Destination", "Departure Date"};
 
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-        JTable flightTable = new JTable(model);
+    //     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+    //     JTable flightTable = new JTable(model);
 
-        for (Flight flight : flightMap.values()) {
-             {
-                Object[] row = new Object[]{
-                    flight.getFlightNumber(),
-                    flight.getDestination().getCity(),
-                    flight.getOrigin().getCity(),
-                };
-                model.addRow(row);
-            }
-        }
-        JScrollPane scrollPane = new JScrollPane(flightTable);
-        add(scrollPane, BorderLayout.CENTER);
+    //     for (Flight flight : flightMap.values()) {
+    //          {
+    //             Object[] row = new Object[]{
+    //                 flight.getFlightNumber(),
+    //                 flight.getDestination().getCity(),
+    //                 flight.getOrigin().getCity(),
+    //             };
+    //             model.addRow(row);
+    //         }
+    //     }
+    //     JScrollPane scrollPane = new JScrollPane(flightTable);
+    //     add(scrollPane, BorderLayout.CENTER);
 
-        bookButton = new JButton("Book Selected Flight");
-        bookButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedFlight = flightsList.getSelectedValue();
-                if (selectedFlight != null) {
-                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseAdminFlightsPanel.this),
-                            "You have booked " + selectedFlight);
-                            AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Seat Map Card");
+    //     bookButton = new JButton("Book Selected Flight");
+    //     bookButton.addActionListener(new ActionListener() {
+    //         @Override
+    //         public void actionPerformed(ActionEvent e) {
+    //             String selectedFlight = flightsList.getSelectedValue();
+    //             if (selectedFlight != null) {
+    //                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseAdminFlightsPanel.this),
+    //                         "You have booked " + selectedFlight);
+    //                         AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Seat Map Card");
                             
-                } else {
-                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseAdminFlightsPanel.this),
-                            "Please select a flight to book.");
-                }
-            }
-        });
+    //             } else {
+    //                 JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseAdminFlightsPanel.this),
+    //                         "Please select a flight to book.");
+    //             }
+    //         }
+    //     });
 
-        refreshButton = new JButton("Refresh Flights");
-        refreshButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Implement logic to refresh the list of flights
-            }
-        });
+    //     refreshButton = new JButton("Refresh Flights");
+    //     refreshButton.addActionListener(new ActionListener() {
+    //         @Override
+    //         public void actionPerformed(ActionEvent e) {
+    //             // Implement logic to refresh the list of flights
+    //         }
+    //     });
 
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.add(refreshButton);
-        buttonsPanel.add(bookButton);
-        add(buttonsPanel, BorderLayout.SOUTH);
-    }
+    //     JPanel buttonsPanel = new JPanel();
+    //     buttonsPanel.add(refreshButton);
+    //     buttonsPanel.add(bookButton);
+    //     add(buttonsPanel, BorderLayout.SOUTH);
+   }
 }

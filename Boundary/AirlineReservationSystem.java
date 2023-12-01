@@ -2,6 +2,7 @@ package Boundary;
 //import Boundary.LoginPanel;
 import javax.swing.*;
 
+import Boundary.BrowseAdminFlightsPanel;
 import Controller.UserController;
 
 import java.awt.*;
