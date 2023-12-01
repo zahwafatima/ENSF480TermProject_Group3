@@ -3,6 +3,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
+import Controller.DatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,8 +21,6 @@ public class Promos {
     private Date promoDateStart;
     private Date promoDateEnd;
 
-    private Connection dbConnection;
-
 
     public Promos(Long promoID, int discountPercent, Date promoDateStart, Date promoDateEnd) {
         this.promoID = promoID;
@@ -32,11 +32,11 @@ public class Promos {
 
     public Map<Long, Promos> getPromosFromDB() {
         Map<Long, Promos> promoMap = new HashMap<>();
-
+            if(DatabaseConnection.dbConnect!=null){
             String query = "SELECT promoID, discountPercent, promoDateStart, promoDateEnd FROM FLIGHTDB.PROMOS";
             
-            try (PreparedStatement statement = connection.prepareStatement(query);
-                 ResultSet resultSet = statement.executeQuery()) {
+            try (PreparedStatement statement = DatabaseConnection.dbConnect.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()) {
 
                 while (resultSet.next()) {
                     long promoID = resultSet.getLong("promoID");
@@ -47,10 +47,11 @@ public class Promos {
                     Promos promo = new Promos(promoID, discountPercent, promoDateStart, promoDateEnd);
                     promoMap.put(promoID, promo);
                 }
-                
+            
+            
             } catch (SQLException e) {
                 e.printStackTrace(); 
-            }
+            }}
 
         return promoMap;
     }

@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class GuestUser extends User{
 
-    private DatabaseConnection db;
 
     public GuestUser(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
         super(userID, isRegistered, name, address, phoneNumber, email, pass, accessLevel);
@@ -30,12 +29,11 @@ public class GuestUser extends User{
         setIsRegistered(!getIsRegistered()); 
         System.err.println("Guest user has subscribed to membership");
     
-        try (Connection connection = db.getConnection()) {
             String sql = "UPDATE FLIGHTDB.USERS SET isRegistered = ? WHERE userID = ?";
             
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setBoolean(1, getIsRegistered());
-                preparedStatement.setInt(2, getUserId()); 
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
+                preparedStatement.setBoolean(1, true);
+                preparedStatement.setInt(2, getUserID()); 
     
                 int rowsAffected = preparedStatement.executeUpdate();
     
@@ -44,11 +42,10 @@ public class GuestUser extends User{
                 } else {
                     System.out.println("User failed to be registered in the user table");
                 }
-            }
+            
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }}
     }
 
-}
 
