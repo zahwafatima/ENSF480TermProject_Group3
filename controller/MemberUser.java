@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.Map;
 
 import Controller.DatabaseConnection;
@@ -11,41 +12,35 @@ public class MemberUser extends User{
     
     private DatabaseConnection db; 
 
-    public MemberUser(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
-        super(userID, isRegistered, name, address, phoneNumber, email, pass, accessLevel);
+    public MemberUser(boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+        super(isRegistered, name, address, phoneNumber, email, pass, accessLevel);
         
         this.db = DatabaseConnection.getOnlyInstance();
     }
 
-    @Override
-    public int calculatePayment(Ticket ticket, int userEnteredPromoCode, Map<Long, Promo> promoMap) {
-        int orgPrice = ticket.getPrice();
-        int fullPrice = orgPrice; 
+    // @Override
+    // public int calculatePayment(Ticket ticket, int userEnteredPromoCode, Map<Long, Promo> promoMap) {
+    //     int orgPrice = ticket.getPrice();
+    //     int fullPrice = orgPrice; 
 
-        // Check if the userEnteredPromoCode matches any promo in the promoMap
-        Promo applicablePromo = promoMap.get((long) userEnteredPromoCode);
+    //     // Check if the userEnteredPromoCode matches any promo in the promoMap
+    //     Promos applicablePromo = promoMap.get((long) userEnteredPromoCode);
 
-        if (applicablePromo != null) {
-            // Check if the current time is within the promotional period
-            Date currentDate = new Date(System.currentTimeMillis());
-            if (currentDate.after(applicablePromo.getPromoDateStart()) && currentDate.before(applicablePromo.getPromoDateEnd())) {
-                // Apply the discount to the original price
-                fullPrice = (int) Math.round(orgPrice * (1 - applicablePromo.getDiscountPercent() / 100.0));
-            }
-        }
+    //     if (applicablePromo != null) {
+    //         // Get the current date
+    //         LocalDate currentDate = LocalDate.now();
 
-        return fullPrice;
-    }
+    //         // Parse promo start and end dates to LocalDate
+    //         LocalDate promoStartDate = LocalDate.parse(applicablePromo.getPromoDateStart());
+    //         LocalDate promoEndDate = LocalDate.parse(applicablePromo.getPromoDateEnd());
 
+    //         // Apply the discount if the current date is within the promotional period
+    //         if (currentDate.isAfter(promoStartDate) && currentDate.isBefore(promoEndDate)) {
+    //             fullPrice = (int) Math.round(orgPrice * (1 - applicablePromo.getDiscountPercent() / 100.0));
+    //         }
+    //     }
 
-
-
-
-
-    
-
-
-
-
+    //     return fullPrice;
+    // }
     
 }

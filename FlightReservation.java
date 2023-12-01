@@ -16,6 +16,7 @@ public class FlightReservation {
             System.out.println("Connection to the database is successful!");
             SwingUtilities.invokeLater(() -> {
                 AirlineReservationSystem frame = new AirlineReservationSystem(usc);
+                
                 frame.setVisible(true);
             });
         } else {
