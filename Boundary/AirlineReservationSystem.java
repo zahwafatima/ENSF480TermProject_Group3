@@ -13,10 +13,11 @@ import java.util.Set;
 public class AirlineReservationSystem extends JFrame {
     private UserController usc;
     static CardLayout cardLayout;
-     static JPanel cardsPanel; // This will contain all the "pages"
+    static JPanel cardsPanel; // This will contain all the "pages"
     private final String LOGIN_CARD = "Login Card";
     private final String SIGNUP_CARD = "Sign-Up Card";
-    private final String BROWSE_FLIGHTS_CARD = "Browse Flights Card";
+    private final String USER_BROWSE_FLIGHTS_CARD = "User Browse Flights Card";
+    private final String ADMIN_BROWSE_FLIGHTS_CARD = "Admin Browse Flights Card";
     private final String SEAT_MAP_CARD = "Seat Map Card";
     private final String CHECKOUT_CARD = "Checkout Card";
 
@@ -29,8 +30,9 @@ public class AirlineReservationSystem extends JFrame {
         JPanel loginPanel = new LoginPanel();
         // Add the cards to the cardsPanel
         cardsPanel.add(loginPanel, LOGIN_CARD);
-         cardsPanel.add(createSignUpPanel(usc), SIGNUP_CARD);
-         cardsPanel.add(createBrowseFlightsPanel(), BROWSE_FLIGHTS_CARD);
+        cardsPanel.add(createSignUpPanel(usc), SIGNUP_CARD);
+        cardsPanel.add(createUserBrowseFlightsPanel(), USER_BROWSE_FLIGHTS_CARD);
+        cardsPanel.add(createAdminBrowseFlightsPanel(), ADMIN_BROWSE_FLIGHTS_CARD);
         // cardsPanel.add(createSeatMapPanel(), SEAT_MAP_CARD);
         // cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
 
@@ -55,8 +57,12 @@ public class AirlineReservationSystem extends JFrame {
         return new SignUpPanel(usc);
     }
     
-    private JPanel createBrowseFlightsPanel() {
-        return new BrowseFlightsPanel(usc);
+    private JPanel createUserBrowseFlightsPanel() {
+        return new BrowseUserFlightsPanel(usc);
+    }
+
+    private JPanel createAdminBrowseFlightsPanel() {
+        return new BrowseAdminFlightsPanel(usc);
     }
     
     private JPanel createSeatMapPanel() {

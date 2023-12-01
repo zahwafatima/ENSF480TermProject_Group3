@@ -6,7 +6,7 @@ import Entity.User;
 
 
 public class Login {
-    private ArrayList<String> emailList; //CHANGE to save to database instead of list 
+    private ArrayList<String> emailList; 
     private ArrayList<String> passwordList;
     private UserController userController;
     private static Login onlyInstance;
@@ -29,13 +29,18 @@ public class Login {
         passwordList.add(user.getPass());
     }
 
-    public boolean isValidUser(String email, String password) { //CHANGE to save to database instead of list 
+    public boolean isValidUser(String email, String password) { 
         int index = emailList.indexOf(email);
         if (index != -1) {
             // Email found, check the corresponding password
             return passwordList.get(index).equals(password);
         }
         return false; // Email not found
+    }
+
+    public String getUserAccessLevel(String email, String password){
+        String accessLevel = userController.getUserAccessLevel(email, password);
+        return accessLevel;
     }
 
     public ArrayList<String> getEmailList() {

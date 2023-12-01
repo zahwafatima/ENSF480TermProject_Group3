@@ -26,7 +26,7 @@ import java.awt.event.ActionListener;
         JPasswordField passwordField = new JPasswordField(15);
 
         // Login button
-        JButton loginButton = new JButton("nogin");
+        JButton loginButton = new JButton("Login");
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -34,15 +34,40 @@ import java.awt.event.ActionListener;
                 char[] password = passwordField.getPassword();
                 String passwordString = new String(password);
                 System.out.println(username + "" + passwordString);
-                if (isValidUser(username, passwordString)== true) {
-                    JOptionPane.showMessageDialog(null, "Welcome" );
-                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Browse Flights Card");
-                }
-                else{
+                String accessLevel = isValidUser(username, passwordString);
+                System.out.println(accessLevel);
+
+                if ( accessLevel.equals("noUser")) {
                     JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                }});
-        //  {
+
+                }else if(accessLevel.equals("customer") || accessLevel.equals("crew")){
+                    JOptionPane.showMessageDialog(null, "Welcome User" );
+                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "User Browse Flights Card");
+
+                }else{
+                    // accessLevel.equals("admin")
+                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Admin Browse Flights Card");
+
+                    JOptionPane.showMessageDialog(null, "Welcome Admin" );
+
+                }}});
+
+        // JButton loginButton = new JButton("Login");
+        // loginButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         String username = userTextField.getText();
+        //         char[] password = passwordField.getPassword();
+        //         String passwordString = new String(password);
+        //         System.out.println(username + "" + passwordString);
+        //         if (isValidUser(username, passwordString)== true) {
+        //             JOptionPane.showMessageDialog(null, "Welcome" );
+        //             AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Browse Flights Card");
+        //         }
+        //         else{
+        //             JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+        //         }
+        //         }});
         
         
             
@@ -83,12 +108,26 @@ import java.awt.event.ActionListener;
                               Component component, int x, int y) {
         addComponent(panel, constraints, component, x, y, 1, 1);
     }
-    private boolean isValidUser(String username,String passwordString){
+
+    private String isValidUser(String username,String passwordString){
         Login login = Login.getOnlyInstance();
-        //login.printUsernameList(login.getEmailList());
-        //System.out.println("user");
-         return login.isValidUser(username,passwordString);
+        boolean userExists = login.isValidUser(username,passwordString);
+        if(userExists){
+            String accessLevel = login.getUserAccessLevel(username, passwordString);
+            return accessLevel;
+
+        }else{
+            return "noUser";
+        }
+        
+
     }
+    // private boolean isValidUser(String username,String passwordString){
+    //     Login login = Login.getOnlyInstance();
+    //     //login.printUsernameList(login.getEmailList());
+    //     //System.out.println("user");
+    //      return login.isValidUser(username,passwordString);
+    // }
     // private String isValidUser(String username,String passwordString){
     //     Login login = Login.getOnlyInstance();
     //     login.isValidUser(username,passwordString);

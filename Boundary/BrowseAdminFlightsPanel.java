@@ -11,14 +11,14 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import javax.swing.table.DefaultTableModel;
 
-public class BrowseFlightsPanel extends JPanel {
+public class BrowseAdminFlightsPanel extends JPanel {
     private JList<String> flightsList;
     private JButton bookButton;
     private JButton refreshButton;
     private UserController usc;
     static Flight selectedFlight;
 
-    public BrowseFlightsPanel(UserController usc) {
+    public BrowseAdminFlightsPanel(UserController usc) {
         setLayout(new BorderLayout());
         this.usc = usc;
 
@@ -48,12 +48,12 @@ public class BrowseFlightsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String selectedFlight = flightsList.getSelectedValue();
                 if (selectedFlight != null) {
-                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseFlightsPanel.this),
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseAdminFlightsPanel.this),
                             "You have booked " + selectedFlight);
                             AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Seat Map Card");
                             
                 } else {
-                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseFlightsPanel.this),
+                    JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseAdminFlightsPanel.this),
                             "Please select a flight to book.");
                 }
             }
