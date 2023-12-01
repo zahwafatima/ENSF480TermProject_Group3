@@ -13,7 +13,8 @@ import Controller.UserController;
 
 public class User {
 
-    DatabaseConnection dbConnection = DatabaseConnection.getOnlyInstance();
+    DatabaseConnection db = DatabaseConnection.getOnlyInstance();
+    Connection connection = db.getConnection();
 
     private int userID;
     private boolean isRegistered; 
@@ -27,7 +28,7 @@ public class User {
     private Login login = Login.getOnlyInstance();
     
     public User(){
-        this.userID =generateUserID();
+        this.userID = generateUserID();
         this.isRegistered = false;
         this.name = new Name("N/A", "N/A");
         this.address = new Address("N/A", "N/A", "N/A");
@@ -36,7 +37,7 @@ public class User {
         this.pass = "N/A";
         this.accessLevel = "N/A";
         
-        login.addUser(this);
+        //login.addUser(this);
         //userController.addUserToDB(this);
 
         login.addUser(this); // Synchronize with Login class
@@ -46,6 +47,21 @@ public class User {
     // Constructor
     public User(boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
         this.userID = generateUserID();
+        this.isRegistered = isRegistered;
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.pass = pass;
+        this.accessLevel = accessLevel;
+
+        Login login = Login.getOnlyInstance();
+        login.addUser(this); // Synchronize with Login class
+        //userController.addUserToDB(this);
+    }
+
+    public User(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
+        this.userID = userID;
         this.isRegistered = isRegistered;
         this.name = name;
         this.address = address;

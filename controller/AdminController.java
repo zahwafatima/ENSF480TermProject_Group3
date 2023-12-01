@@ -87,7 +87,8 @@ public class AdminController extends Entity.User {
 
     // Browse the list crews in a specific flight (for example flight number AB123 to New York).
     // CHNAGE TO CREATE HASHMAP OF CREWID AND NAMES OF EMPLOYEES
-    public void browseCrewByFlight(Flight flight){
+    public Map<String, Crew[]> browseCrewByFlight(Flight flight){
+        Map<String, Crew[]> crewMap = new HashMap<>();
         // Assuming you have a valid Connection object named "connection" from DatabaseConnection.getConnection()
         // try (Connection connection = db.getConnection()) {
             // SQL query to retrieve crew information for a specific flight
@@ -96,6 +97,7 @@ public class AdminController extends Entity.User {
                         "JOIN CREW c ON f.crewID = c.crewID " +
                         "WHERE f.flightNumber = ?";
 
+            printTable("FLIGHT");
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 // Set the flight number parameter in the query
                 preparedStatement.setString(1, flight.getFlightNumber());
@@ -105,7 +107,7 @@ public class AdminController extends Entity.User {
 
                 // Process the result set
                 while (resultSet.next()) {
-                    int crewID = resultSet.getInt("crewID");
+                    String crewID = resultSet.getString("crewID");
                     int pilotID = resultSet.getInt("pilot");
                     int copilotID = resultSet.getInt("copilot");
                     int fa1ID = resultSet.getInt("flightAttendant1");
@@ -113,20 +115,27 @@ public class AdminController extends Entity.User {
                     int fa3ID = resultSet.getInt("flightAttendant3");
                     int fa4ID = resultSet.getInt("flightAttendant4");
 
-                    // Do something with the crew information (e.g., print or store in a data structure)
-                    System.out.println("CrewID: " + crewID);
-                    System.out.println("PilotID: " + pilotID);
-                    System.out.println("CoPilotID: " + copilotID);
-                    System.out.println("FlightAttendant1ID: " + fa1ID);
-                    System.out.println("FlightAttendant2ID: " + fa2ID);
-                    System.out.println("FlightAttendant3ID: " + fa3ID);
-                    System.out.println("FlightAttendant4ID: " + fa4ID);
+
+
+                    Crew pilot = getCrewProfile(pilotID);
+                    Crew copilot = getCrewProfile(copilotID);
+                    Crew fa1 = getCrewProfile(fa1ID);
+                    Crew fa2 = getCrewProfile(fa2ID);
+                    Crew fa3 = getCrewProfile(fa3ID);
+                    Crew fa4 = getCrewProfile(fa4ID);
+
+                    Crew crewList[] = {pilot, copilot, fa1, fa2, fa3, fa4};
+
+                    crewMap.put(crewID, crewList);
+                    
                 }
-            
+            printTable("CREW");
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle exceptions as needed
         }
+
+        return crewMap;
     }
 
     // 
@@ -366,8 +375,8 @@ public class AdminController extends Entity.User {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // SQL query to insert seat information into the SEAT table
-        String seatQuery = "INSERT INTO SEAT (seatNumber, flightNumber, seatClass, isBooked, price, ticketNumber) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String seatQuery = "INSERT INTO SEAT (seatNumber, flightNumber, seatClass, isBooked) " +
+                "VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement flightStatement = connection.prepareStatement(flightQuery);
             PreparedStatement seatStatement = connection.prepareStatement(seatQuery)) {
@@ -396,7 +405,7 @@ public class AdminController extends Entity.User {
             for (int row = 1; row <= 20; row++) {
                 for (char column : new char[]{'A', 'B', 'C'}) {
                     String seatNumber = String.format("%d%s", row, column);
-                    System.out.println(seatNumber);
+                    //System.out.println(seatNumber);
 
                     // Set values for the placeholders in the seat query
                     seatStatement.setString(1, seatNumber);
@@ -420,7 +429,7 @@ public class AdminController extends Entity.User {
             }
 
             
-            printTable("SEAT");
+            //printTable("SEAT");
 
             System.out.println("Seat information added successfully!");
         
@@ -430,42 +439,40 @@ public class AdminController extends Entity.User {
         }
     }
 
-    public void removeFlightInfo(Flight flight){
+    public void removeFlightInfo(Flight flight) {
         // Check if the passed Flight object is not null and has a flightNumber
         if (flight != null && flight.getFlightNumber() != null) {
-            
-            // SQL query to delete a row from the FLIGHT table based on flightNumber
-            String flightQuery = "DELETE FROM FLIGHT WHERE flightNumber = ?";
-
-            // SQL query to delete rows from the SEAT table based on flightNumber
-            String seatQuery = "DELETE FROM SEAT WHERE flightNumber = ?";
-            
-            try (PreparedStatement flightStatement = connection.prepareStatement(flightQuery);
-            PreparedStatement seatStatement = connection.prepareStatement(seatQuery)) {
-
-                // Set the value for the placeholder in the flight query
-                flightStatement.setString(1, flight.getFlightNumber());
-
-                // Execute the flight query
-                int flightRowsAffected = flightStatement.executeUpdate();
-
-                if (flightRowsAffected > 0) {
-                    System.out.println("Flight information removed successfully!");
-
-                    // Set the value for the placeholder in the seat query
+            try {
+                // Delete TICKET records associated with the flight
+                String ticketQuery = "DELETE FROM TICKET WHERE flightNumber = ?";
+                try (PreparedStatement ticketStatement = connection.prepareStatement(ticketQuery)) {
+                    ticketStatement.setString(1, flight.getFlightNumber());
+                    int ticketRowsAffected = ticketStatement.executeUpdate();
+                    System.out.println(ticketRowsAffected + " tickets removed.");
+                }
+    
+                // Delete SEAT records associated with the flight
+                String seatQuery = "DELETE FROM SEAT WHERE flightNumber = ?";
+                try (PreparedStatement seatStatement = connection.prepareStatement(seatQuery)) {
                     seatStatement.setString(1, flight.getFlightNumber());
-
-                    // Execute the seat query
                     int seatRowsAffected = seatStatement.executeUpdate();
-
                     System.out.println(seatRowsAffected + " seats removed.");
-
-                } else {
-                    System.out.println("No flight with the specified flightNumber found.");
-                } 
-                printTable("FLIGHT");
-                printTable("SEAT");
-        }catch (SQLException e) {
+                }
+    
+                // Delete FLIGHT record
+                String flightQuery = "DELETE FROM FLIGHT WHERE flightNumber = ?";
+                try (PreparedStatement flightStatement = connection.prepareStatement(flightQuery)) {
+                    flightStatement.setString(1, flight.getFlightNumber());
+                    int flightRowsAffected = flightStatement.executeUpdate();
+    
+                    if (flightRowsAffected > 0) {
+                        System.out.println("Flight information removed successfully!");
+                        printTable("FLIGHT");
+                    } else {
+                        System.out.println("No flight with the specified flightNumber found.");
+                    }
+                }
+            } catch (SQLException e) {
                 e.printStackTrace();
                 // Handle exceptions as needed
             }
@@ -473,6 +480,9 @@ public class AdminController extends Entity.User {
             System.out.println("Invalid Flight object or flightNumber.");
         }
     }
+    
+    
+    
 
     public void modifyFlightInfo(Flight flight){
         // CHANGE IF FLIGHT NUMBER MODFIED THEN CHANGE SEATS FLIGHTNUMBER
@@ -507,6 +517,7 @@ public class AdminController extends Entity.User {
                         System.out.println("Flight not found in the FLIGHT table.");
                     }
                 
+                    printTable("FLIGHT");
             } catch (SQLException e) {
                 e.printStackTrace();
                 // Handle exceptions as needed
@@ -752,6 +763,35 @@ public class AdminController extends Entity.User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private Crew getCrewProfile(int userID) {
+        Crew crew = null;
+
+        // SQL query to retrieve user information based on userID
+        String query = "SELECT firstName, lastName, accessLevel FROM USERS WHERE userID = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, userID);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    String firstName = resultSet.getString("firstName");
+                    String lastName = resultSet.getString("lastName");
+                    String accessLevel = resultSet.getString("accessLevel");
+
+                    // Create a Crew object with the retrieved information
+                    crew = new Crew(firstName + " " + lastName, accessLevel, String.valueOf(userID));
+                } else {
+                    System.out.println("User not found with userID: " + userID);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions as needed
+        }
+
+        return crew;
     }
 
 
