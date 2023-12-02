@@ -9,8 +9,8 @@ import Controller.GuestUser;
 
 
  class LoginPanel extends JPanel {
-    private String username;
-    private String passwordString;
+ static String username;
+     static String passwordString;
     private UserController userController;
     private GuestUser guestUser;
 
@@ -42,15 +42,22 @@ import Controller.GuestUser;
                 System.out.println(username + "" + passwordString);
                 String accessLevel = isValidUser(username, passwordString);
                 System.out.println(accessLevel);
-
+                boolean isRegistered = userController.getRegisterAccessLevel(username, passwordString);
+                System.out.println(isRegistered);
                 if ( accessLevel.equals("noUser")) {
                     JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
 
                 }else if(accessLevel.equals("customer") || accessLevel.equals("crew")){
                     JOptionPane.showMessageDialog(null, "Welcome User" );
-                    guestUser = (GuestUser) userController.getUserDetails(username, passwordString);
-
-                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "User Navigation Card");
+                    //guestUser = (GuestUser) userController.getUserDetails(username, passwordString);
+                    System.out.println(userController.getRegisterAccessLevel(username, passwordString));
+                    if (userController.getRegisterAccessLevel(username, passwordString)==true){
+                    
+                        AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "User Browse Flights Card");
+                    }
+                    else{AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "User Navigation Card");}
+            
+                    
 
                 }else{
                     // accessLevel.equals("admin")

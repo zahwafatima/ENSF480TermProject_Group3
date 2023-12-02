@@ -31,7 +31,7 @@ public class FlightReservation {
             
             System.out.println("Connection to the database is successful!");
             SwingUtilities.invokeLater(() -> {
-                AirlineReservationSystem frame = new getOnlyInstance(usc, adminController);
+                AirlineReservationSystem frame = new  AirlineReservationSystem(usc,adminController);
                 
                 frame.setVisible(true);
             });

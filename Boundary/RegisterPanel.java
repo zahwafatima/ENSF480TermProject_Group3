@@ -3,7 +3,7 @@ package Boundary;
 import javax.swing.*;
 
 import Boundary.AirlineReservationSystem;
-
+import Boundary.LoginPanel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,16 +26,16 @@ public class RegisterPanel extends JPanel {
 
             registerButton = new JButton("Register for Membership");
             registerButton.addActionListener(new ActionListener() {
-
+        
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("hi lol");
-                    logpan =  AirlineReservationSystem.getOnlyInstance().getLoginPanel();
+                    
 
-                    GuestUser guestUser = gsc.getUserDetails(logpan.getUsername(), logpan.getPasswordString());
+                    gsc.setUserRegistered(LoginPanel.username, LoginPanel.passwordString);
 
                     // Call subscribeToMembership
-                    guestUser.subscribeToMembership();
+                    //guestUser.subscribeToMembership();
                 }
             });
 

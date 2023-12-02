@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class AirlineReservationSystem extends JFrame {
 
-    static private AirlineReservationSystem onlyInstance;
+    //public static AirlineReservationSystem onlyInstance;
     private UserController usc;
     private AdminController adControl;
     private GuestUser gsc;
@@ -34,15 +34,15 @@ public class AirlineReservationSystem extends JFrame {
 
     private LoginPanel loginPanel;
 
-    public static AirlineReservationSystem getOnlyInstance(UserController usc, AdminController adControl) {
-        if (onlyInstance == null) {
-            onlyInstance = new AirlineReservationSystem(usc, adControl);
-        }
-        return onlyInstance;
-    }
+    // public AirlineReservationSystem getOnlyInstance(UserController usc, AdminController adControl) {
+    //     if (onlyInstance == null) {
+    //         onlyInstance = new AirlineReservationSystem(usc, adControl);
+    //     }
+    //     return onlyInstance;
+    // }
     
 
-    private AirlineReservationSystem(UserController usc, AdminController adControl) {
+    public AirlineReservationSystem(UserController usc, AdminController adControl) {
 
         this.usc = usc;
         this.adControl = adControl;

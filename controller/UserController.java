@@ -291,6 +291,21 @@ public GuestUser getUserDetails(String email, String password) {
         return null;
     }
 }
+public boolean setUserRegistered(String email, String password) {
+    String sql = "UPDATE USERS SET isRegistered = true WHERE email = ? AND pass = ?";
+
+    try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
+        preparedStatement.setString(1, email);
+        preparedStatement.setString(2, password);
+
+        int rowsAffected = preparedStatement.executeUpdate();
+
+        // If one row is affected, it means the update was successful
+        return rowsAffected == 1;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }}
 
 
 
@@ -316,6 +331,29 @@ public GuestUser getUserDetails(String email, String password) {
                 e.printStackTrace();
             }
     return "Error retrieving user access level";
+    }
+    public boolean getRegisterAccessLevel(String email, String password) {
+
+        String sql = "SELECT isRegistered FROM USERS WHERE email = ? AND pass = ?";
+    
+        try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+    
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    System.out.println("getting register status");
+                    return resultSet.getBoolean("isRegistered");
+                }
+                else {
+                    // No user found with the given email and password
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public ArrayList<String> emailList() {
