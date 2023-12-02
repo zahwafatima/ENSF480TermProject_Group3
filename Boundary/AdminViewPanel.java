@@ -1,5 +1,4 @@
 package Boundary;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,150 +26,199 @@ public class AdminViewPanel extends JPanel {
     // Other components for aircraft, destinations, and users would be added similarly
 
     public AdminViewPanel(AdminController adminControl) {
-        this.adminController = adminControl;
-        setLayout(new BorderLayout());
-        JTabbedPane tabbedPane = new JTabbedPane();
+//         this.adminController = adminControl;
+//         setLayout(new BorderLayout());
+//         JTabbedPane tabbedPane = new JTabbedPane();
 
-        // Add tabs
-        tabbedPane.add("Flights", createFlightsPanel());
-        //tabbedPane.add("Crew", createCrewPanel());
-        //tabbedPane.add("Aircraft", createAircraftPanel());
-        //tabbedPane.add("Destinations", createDestinationsPanel());
-        //tabbedPane.add("Users", createUsersPanel());
-        // More tabs for additional features
+//         // Add tabs
+//         tabbedPane.add("Flights", createFlightsPanel());
+//         //tabbedPane.add("Crew", createCrewPanel());
+//         //tabbedPane.add("Aircraft", createAircraftPanel());
+//         //tabbedPane.add("Destinations", createDestinationsPanel());
+//         //tabbedPane.add("Users", createUsersPanel());
+//         // More tabs for additional features
 
-        add(tabbedPane, BorderLayout.CENTER);
-    }
+//         add(tabbedPane, BorderLayout.CENTER);
+    
+//     }
 
-    private JPanel createFlightsPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
+//     private JPanel createFlightsPanel() {
+//         JPanel panel = new JPanel(new BorderLayout());
         
-        // Components like buttons, tables, etc. would be initialized and added here
-        // For example:
-        //flightsTable = new JTable(); // This should be populated with flight data
-        Map<String, Flight> flightMap = adminController.browseAllFlights();
+//         // Components like buttons, tables, etc. would be initialized and added here
+//         // For example:
+//         //flightsTable = new JTable(); // This should be populated with flight data
+//         Map<String, Flight> flightMap = adminController.browseAllFlights();
 
-        String[] columnNames = {
-            "Flight Number",
-            "Destination Country", 
-            "Destination City",
-            "Origin Country",
-            "Origin City",
-            "Departure Date",
-            "Arrival Date"
-        };        
+//         String[] columnNames = {
+//             "Flight Number",
+//             "Destination Country", 
+//             "Destination City",
+//             "Origin Country",
+//             "Origin City",
+//             "Departure Date",
+//             "Arrival Date"
+//         };        
 
-        addFlightButton = new JButton("Add Flight");
-        removeFlightButton = new JButton("Remove Flight");
-        modifyFlightButton = new JButton("Modify Flight");
+//         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+//         JTable flightTable = new JTable(model);
 
-        // Add action listeners to your buttons
-        addFlightButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Open add flight dialog or panel
-            }
-        });
+//         for (Flight flight : flightMap.values()) {
+//             Object[] row = new Object[]{
+//                 flight.getFlightNumber(),
+//                 flight.getDestination().getCountry(),
+//                 flight.getDestination().getCity(),
+//                 flight.getOrigin().getCountry(),
+//                 flight.getOrigin().getCity(),
+//                 flight.getDepartureDate(),
+//                 flight.getArrivalDate()
+//             };
+//             model.addRow(row);
+//         }
 
-        removeFlightButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Remove selected flight
-            }
-        });
+//         JScrollPane scrollPane = new JScrollPane(flightTable);
+//         add(scrollPane, BorderLayout.CENTER);             
 
-        modifyFlightButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Modify selected flight
-            }
-        });
+//         addFlightButton = new JButton("Add Flight");
+//         removeFlightButton = new JButton("Remove Flight");
+//         modifyFlightButton = new JButton("Modify Flight");
 
-        // Add components to the panel
-        panel.add(new JScrollPane(flightsTable), BorderLayout.CENTER);
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.add(addFlightButton);
-        buttonsPanel.add(removeFlightButton);
-        buttonsPanel.add(modifyFlightButton);
-        panel.add(buttonsPanel, BorderLayout.SOUTH);
+//         // Add action listeners to your buttons
+//         addFlightButton.addActionListener(new ActionListener() {
+//             public void actionPerformed(ActionEvent e) {
+//                 // Open add flight dialog or panel
+//                 JDialog dialog =  showAddFlightDialog();
+//                 dialog.setVisible(true);
+//             }
+//         });
 
-        return panel;
-    }
-public void showAddFlightDialog() {
-        JDialog dialog = new JDialog();
-        dialog.setTitle("Add Flight");
-        dialog.setLayout(new GridLayout(0, 2));
-        dialog.setSize(300, 400); // Set the size of the dialog
-        dialog.setLocationRelativeTo(this); // Center it relative to the AdminPanel
+//         removeFlightButton.addActionListener(new ActionListener() {
+//             public void actionPerformed(ActionEvent e) {
+//                 int selectedRow = flightTable.getSelectedRow();
+//                 if (selectedRow != -1) {
+//                     String selectedFlight = (String) flightTable.getValueAt(selectedRow, 0);
+//                     adminController.removeFlightInfo(selectedFlight);
+//                     JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(),
+//                             "You have removed" + selectedFlight);
+//                             // Implement your logic for booking the flight here
+//                 } else {
+//                     JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseUserFlightsPanel.this),
+//                             "Please select a flight to remove.");
+//                 }
+//             }
+//         });
+     
 
-        add(new JLabel("Flight Number:"));
-        flightNumberField = new JTextField(20);
-        add(flightNumberField);
+//         modifyFlightButton.addActionListener(new ActionListener() {
+//             public void actionPerformed(ActionEvent e) {
+//                 int selectedRow = flightTable.getSelectedRow();
+//                 if (selectedRow != -1) {
+//                     String selectedFlight = (String) flightTable.getValueAt(selectedRow, 0);
+//                     adminController.removeFlightInfo(selectedFlight);
+//                     JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(),
+//                             "You have modified" + selectedFlight);
+//                             // Implement your logic for booking the flight here
+//                 } else {
+//                     JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseUserFlightsPanel.this),
+//                             "Please select a flight to modify");
+//                 }
+//             }
+//         });
 
-        add(new JLabel("Crew ID:"));
-        crewIDField = new JTextField(20);
-        add(crewIDField);
+//         // Add components to the panel
+//         panel.add(new JScrollPane(flightsTable), BorderLayout.CENTER);
+//         JPanel buttonsPanel = new JPanel();
+//         buttonsPanel.add(addFlightButton);
+//         buttonsPanel.add(removeFlightButton);
+//         buttonsPanel.add(modifyFlightButton);
+//         panel.add(buttonsPanel, BorderLayout.SOUTH);
 
-        add(new JLabel("Destination Country:"));
-        destCountryField = new JTextField(20);
-        add(destCountryField);
+//         return panel;
+//     }
+// public JDialog showAddFlightDialog() {
+//         JDialog dialog = new JDialog();
+//         dialog.setTitle("Add Flight");
+//         dialog.setLayout(new GridLayout(0, 2));
+//         dialog.setSize(300, 400); // Set the size of the dialog
+//         dialog.setLocationRelativeTo(this); // Center it relative to the AdminPanel
+        
 
-        add(new JLabel("Destination City:"));
-        destCityField = new JTextField(20);
-        add(destCityField);
+//         dialog.add(new JLabel("Flight Number:"));
+//         flightNumberField = new JTextField(20);
+//         dialog.add(flightNumberField);
 
-        add(new JLabel("Origin Country:"));
-        originCountryField = new JTextField(20);
-        add(originCountryField);
+//         dialog.add(new JLabel("Crew ID:"));
+//         crewIDField = new JTextField(20);
+//        dialog.add(crewIDField);
 
-        add(new JLabel("Origin City:"));
-        originCityField = new JTextField(20);
-        add(originCityField);
+//         dialog.add(new JLabel("Destination Country:"));
+//         destCountryField = new JTextField(20);
+//         dialog.add(destCountryField);
 
-        add(new JLabel("Capacity:"));
-        capacityField = new JTextField(20);
-        add(capacityField);
+//         dialog.add(new JLabel("Destination City:"));
+//         destCityField = new JTextField(20);
+//         dialog.add(destCityField);
 
-        add(new JLabel("Departure Date:"));
-        departureDateField = new JTextField(20);
-        add(departureDateField);
+//        dialog.add(new JLabel("Origin Country:"));
+//         originCountryField = new JTextField(20);
+//         dialog.add(originCountryField);
 
-        add(new JLabel("Arrival Date:"));
-        arrivalDateField = new JTextField(20);
-        add(arrivalDateField);
+//         dialog.add(new JLabel("Origin City:"));
+//         originCityField = new JTextField(20);
+//         dialog.add(originCityField);
 
-        add(new JLabel("Aircraft ID:"));
-        aircraftIDField = new JTextField(20);
-        add(aircraftIDField);
-        add(new JLabel("Aircraft Model:"));
-        aircraftModelField = new JTextField(20);
-        add(aircraftModelField);
+//         dialog.add(new JLabel("Capacity:"));
+//         capacityField = new JTextField(20);
+//         dialog.add(capacityField);
+
+//         dialog.add(new JLabel("Departure Date:"));
+//         departureDateField = new JTextField(20);
+//         dialog.add(departureDateField);
+
+//         dialog.add(new JLabel("Arrival Date:"));
+//         arrivalDateField = new JTextField(20);
+//         dialog.add(arrivalDateField);
+
+//        dialog.add(new JLabel("Aircraft ID:"));
+//         aircraftIDField = new JTextField(20);
+//         dialog.add(aircraftIDField);
+//         dialog.add(new JLabel("Aircraft Model:"));
+//         aircraftModelField = new JTextField(20);
+//         dialog.add(aircraftModelField);
+//         submitButton = new JButton("Submit");
+//         submitButton.addActionListener(new ActionListener() {
+//             public  void actionPerformed(ActionEvent e) {
+//                 String flightNumber = flightNumberField.getText();
+//                 String crewID = crewIDField.getText();
+//                 String departureDate = departureDateField.getText();
+//                 String destCountry = destCountryField.getText();
+//                 String destCity = destCityField.getText();
+//                 String originCountry = originCountryField.getText();
+//                 String originCity = originCityField.getText();
+//                 int capacity = Integer.parseInt(capacityField.getText());
+//                 int aircraftID = Integer.parseInt(aircraftIDField.getText());
+//                 String aircraftModel = aircraftModelField.getText();
+//                 String depTime= departureDateField.getText();
+//                 String arrTime = arrivalDateField.getText();
+//                 Location origin = new Location(originCity,originCountry);//might edit them to check if location exists
+//                 Location dest = new Location(destCity,destCountry);
+//                 Aircraft ac = new Aircraft(aircraftID);
+//                 ac.setAircraftModel(aircraftModel);
+//                 Flight flight = new Flight(flightNumber,crewID,dest,origin,capacity,depTime,arrTime,ac);
+//                 adminController.addFlightInfo(flight);
+//                 System.out.println("flight added by admin successfully");
+               
+//             }
+//         });
+//         dialog.add(submitButton);
+//         return dialog;
+// }
+// private JPanel createCrewPanel() {
+//         JPanel panel = new JPanel(new BorderLayout());
+        
+       }
 
 
-
-        submitButton = new JButton("Submit");
-        submitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String flightNumber = flightNumberField.getText();
-                String crewID = crewIDField.getText();
-                String departureDate = departureDateField.getText();
-                String destCountry = destCountryField.getText();
-                String destCity = destCityField.getText();
-                String originCountry = originCountryField.getText();
-                String originCity = originCityField.getText();
-                int capacity = Integer.parseInt(capacityField.getText());
-                int aircraftID = Integer.parseInt(aircraftIDField.getText());
-                String aircraftModel = aircraftModelField.getText();
-                String depTime= departureDateField.getText();
-                String arrTime = arrivalDateField.getText();
-                Location origin = new Location(originCity,originCountry);//might edit them to check if location exists
-                Location dest = new Location(destCity,destCountry);
-                Aircraft ac = new Aircraft(aircraftID);
-                ac.setAircraftModel(aircraftModel);
-                Flight flight = new Flight(flightNumber,crewID,dest,origin,capacity,depTime,arrTime,ac);
-                adminController.addFlightInfo(flight);
-                System.out.println("flight added by admin successfully");
-                
-            }
-        });
-}
     
     // Similar methods for creating other panels like createCrewPanel, createAircraftPanel, etc.
 

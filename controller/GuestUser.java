@@ -18,6 +18,10 @@ import java.util.Map;
 
 public class GuestUser extends User{
 
+    public GuestUser(){
+        
+    }
+
 
     public GuestUser(int userID, boolean isRegistered, Name name, Address address, long phoneNumber, String email, String pass, String accessLevel) {
         super(userID, isRegistered, name, address, phoneNumber, email, pass, accessLevel);

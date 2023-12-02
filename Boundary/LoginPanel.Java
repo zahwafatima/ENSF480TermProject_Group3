@@ -4,13 +4,18 @@ import java.awt.*;
 import Controller.Login;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import Controller.UserController;
+import Controller.GuestUser;
+
 
  class LoginPanel extends JPanel {
-    //private GuestUser gsc == null;
-
-    
+    private String username;
+    private String passwordString;
+    private UserController userController;
+    private GuestUser guestUser;
 
     public LoginPanel() {
+        this.userController  = new UserController();
         
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -31,9 +36,9 @@ import java.awt.event.ActionListener;
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String username = userTextField.getText();
+                username = userTextField.getText();
                 char[] password = passwordField.getPassword();
-                String passwordString = new String(password);
+                passwordString = new String(password);
                 System.out.println(username + "" + passwordString);
                 String accessLevel = isValidUser(username, passwordString);
                 System.out.println(accessLevel);
@@ -43,6 +48,8 @@ import java.awt.event.ActionListener;
 
                 }else if(accessLevel.equals("customer") || accessLevel.equals("crew")){
                     JOptionPane.showMessageDialog(null, "Welcome User" );
+                    guestUser = (GuestUser) userController.getUserDetails(username, passwordString);
+
                     AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "User Navigation Card");
 
                 }else{
@@ -70,6 +77,10 @@ import java.awt.event.ActionListener;
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Login Panel"));
     }
 
+    public GuestUser getGuestUser(){  return guestUser; }
+    public String getUsername() { return username; }
+    public String getPasswordString() { return this.passwordString; }
+
     private void addComponent(JPanel panel, GridBagConstraints constraints, 
                               Component component, int x, int y, int width, int height) {
         constraints.gridx = x;
@@ -88,7 +99,7 @@ import java.awt.event.ActionListener;
         Login login = Login.getOnlyInstance();
         boolean userExists = login.isValidUser(username,passwordString);
         if(userExists){
-            
+
             String accessLevel = login.getUserAccessLevel(username, passwordString);
             return accessLevel;
 

@@ -15,9 +15,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import Controller.DatabaseConnection;
+import Controller.GuestUser;
 import Entity.*;
 
 
@@ -105,7 +107,7 @@ public class UserController {
     // user has chosen a flight from GUI after seeing flights list from browseAllFlights, flightNum is passed
     public void selectFlight(String flightNum) {
         // show user the current seat map for this flight, 
-        // GUI should show which are available and not based on isBooked attribute
+        // GUI should show which seats are available and not based on isBooked attribute
         browseSeatMap(flightNum);
         // the user should pick input a seat after seeing the seatMap, passing this value to selectSeat
     }
@@ -139,7 +141,55 @@ public class UserController {
             // get seatClass
             // already have userID
 
+            // Create Ticket Number
+            String ticketNumber = generateUniqueTicketNumber();
 
+            // Get user information from USERS table
+            String userQuery = "SELECT firstName, lastName FROM USERS WHERE userID = ?";
+            try (PreparedStatement userStatement = DatabaseConnection.dbConnect.prepareStatement(userQuery)) {
+                userStatement.setInt(1, userID);
+                ResultSet userResultSet = userStatement.executeQuery();
+
+                if (userResultSet.next()) {
+                    String passengerFirstName = userResultSet.getString("firstName");
+                    String passengerLastName = userResultSet.getString("lastName");
+
+                    // Get seatClass from SEAT table
+                    String seatClassQuery = "SELECT seatClass FROM SEAT WHERE seatNumber = ? AND flightNumber = ?";
+                    try (PreparedStatement seatClassStatement = DatabaseConnection.dbConnect.prepareStatement(seatClassQuery)) {
+                        seatClassStatement.setString(1, seatNum);
+                        seatClassStatement.setString(2, flightNum);
+                        ResultSet seatClassResultSet = seatClassStatement.executeQuery();
+
+                        if (seatClassResultSet.next()) {
+                            String seatClass = seatClassResultSet.getString("seatClass");
+
+                            // Insert the ticket into the TICKET table
+                            String insertTicketQuery = "INSERT INTO TICKET (ticketNumber, flightNumber, passenger_fName, passenger_lName, seatNumber, seatClass, userID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                            try (PreparedStatement insertTicketStatement = DatabaseConnection.dbConnect.prepareStatement(insertTicketQuery)) {
+                                insertTicketStatement.setString(1, ticketNumber);
+                                insertTicketStatement.setString(2, flightNum);
+                                insertTicketStatement.setString(3, passengerFirstName);
+                                insertTicketStatement.setString(4, passengerLastName);
+                                insertTicketStatement.setString(5, seatNum);
+                                insertTicketStatement.setString(6, seatClass);
+                                insertTicketStatement.setInt(7, userID);
+
+                                int rowsInserted = insertTicketStatement.executeUpdate();
+
+                                if (rowsInserted > 0) {
+                                    System.out.println("Ticket " + ticketNumber + " created successfully!");
+                                } else {
+                                    System.out.println("Failed to create ticket.");
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Handle exceptions as needed
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle exceptions as needed
@@ -178,44 +228,70 @@ public class UserController {
         return seatMap;
     }
 
-    
-
-
-    public Map<String, User> getUserDetails(String email, String password) {
-        Map<String, User> userDetails = new HashMap<>();
-
-        String sql = "SELECT * FROM USERS WHERE email = ? AND pass = ?";
-        
-        try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    // User found, create a map with user details
-                    User user = new User(
-                        resultSet.getInt("userID"),
-                        resultSet.getBoolean("isRegistered"),
-                        new Name(resultSet.getString("firstName"), resultSet.getString("lastName")),
-                        new Address(resultSet.getString("street"), resultSet.getString("city"), resultSet.getString("country")),
-                        resultSet.getLong("phoneNumber"),
-                        resultSet.getString("email"),
-                        resultSet.getString("pass"),
-                        resultSet.getString("accessLevel")
-                    );
-                    userDetails.put("user", user);
-
-                    return userDetails;
-                } else {
-                    // No user found with the given email and password
-                    return null;
-                }
+    // function for user to delete their ticket and make seat available again 
+    // seatNum not being considered because a user may want multiple tickets to cancel (i.e. family travel)
+    public void cancelFlight(String flightNum, int userID) {
+        try {
+            // update seat before deleting ticket so that seatNum is properly found
+            // Update SEAT records associated with the flight and userID
+            // will find seat from ticket using userID and flightNumber to ensure exact booking is being made available
+            String updateSeatQuery = "UPDATE SEAT SET isBooked = FALSE WHERE flightNumber = ? AND seatNumber IN (SELECT seatNumber FROM TICKET WHERE flightNumber = ? AND userID = ?)";
+            try (PreparedStatement updateSeatStatement = DatabaseConnection.dbConnect.prepareStatement(updateSeatQuery)) {
+                updateSeatStatement.setString(1, flightNum);
+                updateSeatStatement.setString(2, flightNum);
+                updateSeatStatement.setInt(3, userID);
+                int seatRowsAffected = updateSeatStatement.executeUpdate();
+                System.out.println(seatRowsAffected + " seats made available.");
             }
+
+            // Delete TICKET records associated with the flight and userID
+            String deleteTicketQuery = "DELETE FROM TICKET WHERE flightNumber = ? AND userID = ?";
+            try (PreparedStatement deleteTicketStatement = DatabaseConnection.dbConnect.prepareStatement(deleteTicketQuery)) {
+                deleteTicketStatement.setString(1, flightNum);
+                deleteTicketStatement.setInt(2, userID);
+                int ticketRowsAffected = deleteTicketStatement.executeUpdate();
+                System.out.println(ticketRowsAffected + " tickets canceled.");
+            }
+
+            // NEED GUI TO PROVIDE CANCELLATION NOTIFICATION TO USER AND NOTIF TO ADMIN ABOUT SEATS BEING AVAILABLE
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            // Handle exceptions as needed
         }
     }
+
+    
+public GuestUser getUserDetails(String email, String password) {
+    String sql = "SELECT * FROM USERS WHERE email = ? AND pass = ?";
+    
+    try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
+        preparedStatement.setString(1, email);
+        preparedStatement.setString(2, password);
+
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            if (resultSet.next()) {
+                // User found, create a User object with user details
+                return new GuestUser(
+                    resultSet.getInt("userID"),
+                    resultSet.getBoolean("isRegistered"),
+                    new Name(resultSet.getString("firstName"), resultSet.getString("lastName")),
+                    new Address(resultSet.getString("street"), resultSet.getString("city"), resultSet.getString("country")),
+                    resultSet.getLong("phoneNumber"),
+                    resultSet.getString("email"),
+                    resultSet.getString("pass"),
+                    resultSet.getString("accessLevel")
+                );
+            } else {
+                // No user found with the given email and password
+                return null;
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
 
 
     //find accessLevel after login 
@@ -309,6 +385,54 @@ public class UserController {
         // } catch (IOException e) {
         //     e.printStackTrace();
         // }
+    }
+
+    private String generateUniqueTicketNumber() {
+        // Define the format for the ticket number
+        String ticketPrefix = "T";
+
+        // Generate a random 3-digit number
+        String randomTicketNumber = generateRandomTicketNumber(3);
+
+        // Check if the generated ticket number is unique
+        while (!ticketNumUnique(ticketPrefix + randomTicketNumber)) {
+            randomTicketNumber = generateRandomTicketNumber(3);
+        }
+
+        // Combine the prefix and the unique random number to create the final ticket number
+        return ticketPrefix + randomTicketNumber;
+    }
+
+    private String generateRandomTicketNumber(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            sb.append(random.nextInt(10)); // Append a random digit (0-9)
+        }
+
+        return sb.toString();
+    }
+
+    // Method to check if a ticket number exists in the TICKET table
+    public static boolean ticketNumUnique(String ticketNumber) {
+        String query = "SELECT COUNT(*) AS count FROM TICKET WHERE ticketNumber = ?";
+        
+        try (
+            PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
+            preparedStatement.setString(1, ticketNumber);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt("count");
+                    return count > 0; // If count > 0, the ticket number already exists
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false; // Return false in case of exceptions or if the query fails
     }
     
 }

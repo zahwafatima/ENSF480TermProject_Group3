@@ -14,11 +14,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AirlineReservationSystem extends JFrame {
+
+    static private AirlineReservationSystem onlyInstance;
     private UserController usc;
     private AdminController adControl;
     private GuestUser gsc;
     static CardLayout cardLayout;
     static JPanel cardsPanel; // This will contain all the "pages"
+
     private final String LOGIN_CARD = "Login Card";
     private final String SIGNUP_CARD = "Sign-Up Card";
     private final String USER_NAVIGATION_CARD = "User Navigation Card";
@@ -29,14 +32,27 @@ public class AirlineReservationSystem extends JFrame {
     private final String CHECKOUT_CARD = "Checkout Card";
     private final String ADMINVIEW_CARD = "Admin Card";
 
-    public AirlineReservationSystem(UserController usc, AdminController adControl) {
+    private LoginPanel loginPanel;
+
+    public static AirlineReservationSystem getOnlyInstance(UserController usc, AdminController adControl) {
+        if (onlyInstance == null) {
+            onlyInstance = new AirlineReservationSystem(usc, adControl);
+        }
+        return onlyInstance;
+    }
+    
+
+    private AirlineReservationSystem(UserController usc, AdminController adControl) {
+
         this.usc = usc;
         this.adControl = adControl;
         cardLayout = new CardLayout();
         cardsPanel = new JPanel(cardLayout);
 
         // Create the card panels.
-        JPanel loginPanel = new LoginPanel();
+        loginPanel = new LoginPanel();
+        
+
         // Add the cards to the cardsPanel
         cardsPanel.add(loginPanel, LOGIN_CARD);
         cardsPanel.add(createSignUpPanel(usc), SIGNUP_CARD);
@@ -58,11 +74,12 @@ public class AirlineReservationSystem extends JFrame {
         setTitle("Airline Reservation System");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // onlyInstance = this;
     }
-    // private JPanel createLoginPanel() {
-       
-    //     return loginPanel;
-    // }
+    
+    public LoginPanel getLoginPanel(){  return loginPanel;  }
+    
     
     private JPanel createAdminViewPanel(AdminController adControl) {
         // Assuming SignUpPanel has a constructor that takes no arguments
@@ -79,7 +96,7 @@ public class AirlineReservationSystem extends JFrame {
     }
     private JPanel createRegisterPanel() {
         // Assuming SignUpPanel has a constructor that takes no arguments
-        return new RegisterPanel(gsc);
+        return new RegisterPanel();
     }
     
     private JPanel createUserBrowseFlightsPanel() {
@@ -102,7 +119,7 @@ public class AirlineReservationSystem extends JFrame {
     }
 
 }
-    
+
     // private JPanel createLoginPanel(JPanel cardsPanel) {
     //     LoginPanel loginPanel = new LoginPanel();
     //     return loginPanel;

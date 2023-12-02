@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 public class UserNavigationPanel extends JPanel {
 
+
     public UserNavigationPanel() {
         JButton currentFlightButton = new JButton("View all current flights");
         currentFlightButton.addActionListener(new ActionListener() {
