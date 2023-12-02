@@ -85,11 +85,9 @@ public class AdminController extends Entity.User {
         return flightsMap;
     }
 
-    
-
     // Browse the list crews in a specific flight (for example flight number AB123 to New York).
     // CHNAGE TO CREATE HASHMAP OF CREWID AND NAMES OF EMPLOYEES
-    public Map<String, Crew[]> browseCrewByFlight(Flight flight){
+    public Map<String, Crew[]> browseCrewByFlight(String flightNum){
         Map<String, Crew[]> crewMap = new HashMap<>();
         // Assuming you have a valid Connection object named "connection" from DatabaseConnection.getConnection()
         // try (Connection connection = db.getConnection()) {
@@ -102,7 +100,7 @@ public class AdminController extends Entity.User {
             printTable("FLIGHT");
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 // Set the flight number parameter in the query
-                preparedStatement.setString(1, flight.getFlightNumber());
+                preparedStatement.setString(1, flightNum);
 
                 // Execute the query
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -262,22 +260,22 @@ public class AdminController extends Entity.User {
         }
     }
 
-    public void removeAircraft(Aircraft aircraft){
+    public void removeAircraft(int aircraftID){
         // try (Connection connection = db.getConnection()) {
             // SQL query to remove an aircraft from the AIRCRAFT table based on aircraftID
             String deleteQuery = "DELETE FROM AIRCRAFT WHERE aircraftID = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
                 // Set the aircraftID parameter in the prepared statement
-                preparedStatement.setInt(1, aircraft.getAircraftID());
+                preparedStatement.setInt(1, aircraftID);
 
                 // Execute the DELETE statement
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    System.out.println("Aircraft with ID " + aircraft.getAircraftID() + " removed successfully.");
+                    System.out.println("Aircraft with ID " + aircraftID + " removed successfully.");
                 } else {
-                    System.out.println("No aircraft found with ID " + aircraft.getAircraftID() + ".");
+                    System.out.println("No aircraft found with ID " + aircraftID + ".");
                 }
                 printTable("AIRCRAFT");
             
@@ -331,17 +329,17 @@ public class AdminController extends Entity.User {
         }
     }
 
-    public void removeDestination(Location location){
+    public void removeDestination(int destinationID){
         // Check if the passed Location object is not null
-        if (location != null) {
+        if (destinationID != 0) {
             // try (Connection connection = db.getConnection()) {
                 // SQL query to delete a row from the DESTINATION table
-                String query = "DELETE FROM DESTINATION WHERE destinationCountry = ? AND destinationCity = ?";
+                String query = "DELETE FROM DESTINATION WHERE destinationID = ?";
 
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     // Set the values for the placeholders in the query
-                    preparedStatement.setString(1, location.getCountry());
-                    preparedStatement.setString(2, location.getCity());
+                    preparedStatement.setInt(1, destinationID);
+                
 
                     // Execute the query
                     int rowsAffected = preparedStatement.executeUpdate();
@@ -431,7 +429,7 @@ public class AdminController extends Entity.User {
             }
 
             
-            //printTable("SEAT");
+            printTable("SEAT");
 
             System.out.println("Seat information added successfully!");
         
@@ -441,14 +439,13 @@ public class AdminController extends Entity.User {
         }
     }
 
-    public void removeFlightInfo(Flight flight) {
-        // Check if the passed Flight object is not null and has a flightNumber
-        if (flight != null && flight.getFlightNumber() != null) {
+    public void removeFlightInfo(String flightNum) {
+        if (flightNum != null) {
             try {
                 // Delete TICKET records associated with the flight
                 String ticketQuery = "DELETE FROM TICKET WHERE flightNumber = ?";
                 try (PreparedStatement ticketStatement = connection.prepareStatement(ticketQuery)) {
-                    ticketStatement.setString(1, flight.getFlightNumber());
+                    ticketStatement.setString(1, flightNum);
                     int ticketRowsAffected = ticketStatement.executeUpdate();
                     System.out.println(ticketRowsAffected + " tickets removed.");
                 }
@@ -456,15 +453,15 @@ public class AdminController extends Entity.User {
                 // Delete SEAT records associated with the flight
                 String seatQuery = "DELETE FROM SEAT WHERE flightNumber = ?";
                 try (PreparedStatement seatStatement = connection.prepareStatement(seatQuery)) {
-                    seatStatement.setString(1, flight.getFlightNumber());
+                    seatStatement.setString(1, flightNum);
                     int seatRowsAffected = seatStatement.executeUpdate();
                     System.out.println(seatRowsAffected + " seats removed.");
                 }
     
-                // Delete FLIGHT record
+                // Finally, delete FLIGHT record
                 String flightQuery = "DELETE FROM FLIGHT WHERE flightNumber = ?";
                 try (PreparedStatement flightStatement = connection.prepareStatement(flightQuery)) {
-                    flightStatement.setString(1, flight.getFlightNumber());
+                    flightStatement.setString(1, flightNum);
                     int flightRowsAffected = flightStatement.executeUpdate();
     
                     if (flightRowsAffected > 0) {
@@ -474,14 +471,20 @@ public class AdminController extends Entity.User {
                         System.out.println("No flight with the specified flightNumber found.");
                     }
                 }
+
+                printTable("TICKET");
+                printTable("SEAT");
+                printTable("FLIGHT");
             } catch (SQLException e) {
                 e.printStackTrace();
                 // Handle exceptions as needed
             }
         } else {
-            System.out.println("Invalid Flight object or flightNumber.");
+            System.out.println("Invalid flightNumber.");
         }
     }
+    
+    
     
     
     
