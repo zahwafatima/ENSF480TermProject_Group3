@@ -75,6 +75,8 @@ public class User {
         //userController.addUserToDB(this);
     }
 
+    
+
     private int generateUserID(){
         // Generate a new userID
         try {do {

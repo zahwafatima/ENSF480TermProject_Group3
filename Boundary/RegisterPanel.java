@@ -28,30 +28,18 @@ public class RegisterPanel extends JPanel {
             registerButton.addActionListener(new ActionListener() {
         
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("hi lol");
-                    
+                public void actionPerformed(ActionEvent e) {                    
 
                     gsc.setUserRegistered(LoginPanel.username, LoginPanel.passwordString);
-
-                    // Call subscribeToMembership
-                    //guestUser.subscribeToMembership();
+                    JOptionPane.showMessageDialog(RegisterPanel.this, "Registration successful", "Success", JOptionPane.INFORMATION_MESSAGE);
                 }
             });
 
-        
-        
-
-        // Add components to the panel
-  
+          
         add(registerButton);
         
-        // Add other components as needed
     }
 
-    // public void getUser(){
-    //     GuestUser guestUser = gsc.getUserDetails(logpan.getUsername(), logpan.getPasswordString());
-    // }
 }
 
 
