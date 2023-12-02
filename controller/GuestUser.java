@@ -1,3 +1,6 @@
+package Controller;
+
+
 import Controller.DatabaseConnection;
 import Controller.UserController;
 import Entity.Address;
@@ -26,7 +29,7 @@ public class GuestUser extends User{
     // }
 
     public void subscribeToMembership() {
-        setIsRegistered(!getIsRegistered()); 
+        setIsRegistered(true); 
         System.err.println("Guest user has subscribed to membership");
     
             String sql = "UPDATE FLIGHTDB.USERS SET isRegistered = ? WHERE userID = ?";

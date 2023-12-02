@@ -3,6 +3,7 @@ package Boundary;
 import javax.swing.*;
 
 import Boundary.BrowseAdminFlightsPanel;
+import Controller.GuestUser;
 import Controller.UserController;
 
 import java.awt.*;
@@ -13,10 +14,13 @@ import java.util.Set;
 
 public class AirlineReservationSystem extends JFrame {
     private UserController usc;
+    private GuestUser gsc;
     static CardLayout cardLayout;
     static JPanel cardsPanel; // This will contain all the "pages"
     private final String LOGIN_CARD = "Login Card";
     private final String SIGNUP_CARD = "Sign-Up Card";
+    private final String USER_NAVIGATION_CARD = "User Navigation Card";
+    private final String REGISTER_PANEL = "Register membership Card";
     private final String USER_BROWSE_FLIGHTS_CARD = "User Browse Flights Card";
     private final String ADMIN_BROWSE_FLIGHTS_CARD = "Admin Browse Flights Card";
     private final String SEAT_MAP_CARD = "Seat Map Card";
@@ -32,6 +36,8 @@ public class AirlineReservationSystem extends JFrame {
         // Add the cards to the cardsPanel
         cardsPanel.add(loginPanel, LOGIN_CARD);
         cardsPanel.add(createSignUpPanel(usc), SIGNUP_CARD);
+        cardsPanel.add(createUserNavigationPanel(), USER_NAVIGATION_CARD);
+        cardsPanel.add(createRegisterPanel(), REGISTER_PANEL);
         cardsPanel.add(createUserBrowseFlightsPanel(), USER_BROWSE_FLIGHTS_CARD);
         cardsPanel.add(createAdminBrowseFlightsPanel(), ADMIN_BROWSE_FLIGHTS_CARD);
         // cardsPanel.add(createSeatMapPanel(), SEAT_MAP_CARD);
@@ -57,6 +63,15 @@ public class AirlineReservationSystem extends JFrame {
         // Assuming SignUpPanel has a constructor that takes no arguments
         return new SignUpPanel(usc);
     }
+
+    private JPanel createUserNavigationPanel() {
+        // Assuming SignUpPanel has a constructor that takes no arguments
+        return new UserNavigationPanel();
+    }
+    private JPanel createRegisterPanel() {
+        // Assuming SignUpPanel has a constructor that takes no arguments
+        return new RegisterPanel(gsc);
+    }
     
     private JPanel createUserBrowseFlightsPanel() {
         return new BrowseUserFlightsPanel(usc);
@@ -76,6 +91,8 @@ public class AirlineReservationSystem extends JFrame {
         // Assuming you will pass the actual selected seats to the constructor
         return new CheckoutPanel(selectedSeats);
     }
+
+}
     
     // private JPanel createLoginPanel(JPanel cardsPanel) {
     //     LoginPanel loginPanel = new LoginPanel();
@@ -130,4 +147,3 @@ public class AirlineReservationSystem extends JFrame {
     // }
 
 
-}

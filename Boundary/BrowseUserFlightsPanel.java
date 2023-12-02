@@ -22,13 +22,16 @@ public class BrowseUserFlightsPanel extends JPanel {
     public BrowseUserFlightsPanel(UserController usc) {
         setLayout(new BorderLayout());
         this.usc = usc;
-        System.out.println("hi1");
         Map<String, Flight> flightMap = usc.browseAllFlights();
 
         String[] columnNames = {
             "Flight Number",
+            "Destination Country", 
             "Destination City",
+            "Origin Country",
             "Origin City",
+            "Departure Date",
+            "Arrival Date"
         };        
 
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -37,8 +40,12 @@ public class BrowseUserFlightsPanel extends JPanel {
         for (Flight flight : flightMap.values()) {
             Object[] row = new Object[]{
                 flight.getFlightNumber(),
+                flight.getDestination().getCountry(),
                 flight.getDestination().getCity(),
+                flight.getOrigin().getCountry(),
                 flight.getOrigin().getCity(),
+                flight.getDepartureDate(),
+                flight.getArrivalDate()
             };
             model.addRow(row);
         }

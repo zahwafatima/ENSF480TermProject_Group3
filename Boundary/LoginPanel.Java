@@ -6,11 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
  class LoginPanel extends JPanel {
+    private GuestUser gsc == null;
+
     
 
     public LoginPanel() {
         
-
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -42,7 +43,7 @@ import java.awt.event.ActionListener;
 
                 }else if(accessLevel.equals("customer") || accessLevel.equals("crew")){
                     JOptionPane.showMessageDialog(null, "Welcome User" );
-                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "User Browse Flights Card");
+                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "User Navigation Card");
 
                 }else{
                     // accessLevel.equals("admin")
@@ -50,37 +51,10 @@ import java.awt.event.ActionListener;
 
                     JOptionPane.showMessageDialog(null, "Welcome Admin" );
 
-                }}});
+                }
+            }
+        });
 
-        // JButton loginButton = new JButton("Login");
-        // loginButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         String username = userTextField.getText();
-        //         char[] password = passwordField.getPassword();
-        //         String passwordString = new String(password);
-        //         System.out.println(username + "" + passwordString);
-        //         if (isValidUser(username, passwordString)== true) {
-        //             JOptionPane.showMessageDialog(null, "Welcome" );
-        //             AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Browse Flights Card");
-        //         }
-        //         else{
-        //             JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
-        //         }
-        //         }});
-        
-        
-            
-        //         // If valid, show welcome message
-        //         JOptionPane.showMessageDialog(null, "Welcome, " + username + "!");
-        //         // Navigate to the next card
-        //         //AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Browse Flights Card");
-        //     } else {
-        //         // If not valid, show error message
-        //         JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
-        //     }
-        // }
-        // Adding components to the panel with constraints
         addComponent(this, constraints, userLabel, 0, 0);
         addComponent(this, constraints, userTextField, 1, 0);
         addComponent(this, constraints, passwordLabel, 0, 1);
@@ -113,6 +87,7 @@ import java.awt.event.ActionListener;
         Login login = Login.getOnlyInstance();
         boolean userExists = login.isValidUser(username,passwordString);
         if(userExists){
+            
             String accessLevel = login.getUserAccessLevel(username, passwordString);
             return accessLevel;
 
@@ -122,16 +97,6 @@ import java.awt.event.ActionListener;
         
 
     }
-    // private boolean isValidUser(String username,String passwordString){
-    //     Login login = Login.getOnlyInstance();
-    //     //login.printUsernameList(login.getEmailList());
-    //     //System.out.println("user");
-    //      return login.isValidUser(username,passwordString);
-    // }
-    // private String isValidUser(String username,String passwordString){
-    //     Login login = Login.getOnlyInstance();
-    //     login.isValidUser(username,passwordString);
-    // }
 
 
 }

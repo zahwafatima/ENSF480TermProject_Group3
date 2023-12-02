@@ -18,12 +18,8 @@ import java.util.Map;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import Controller.DatabaseConnection;
-import Entity.Flight;
-import Entity.Seat;
-import Entity.Ticket;
-import Entity.User;
-import Entity.Aircraft;
-import Entity.Location;
+import Entity.*;
+
 
 public class UserController {
 
@@ -132,6 +128,43 @@ public class UserController {
 
         return seatMap;
     }
+
+    public Map<String, User> getUserDetails(String email, String password) {
+        Map<String, User> userDetails = new HashMap<>();
+
+        String sql = "SELECT * FROM USERS WHERE email = ? AND pass = ?";
+        
+        try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    // User found, create a map with user details
+                    User user = new User(
+                        resultSet.getInt("userID"),
+                        resultSet.getBoolean("isRegistered"),
+                        new Name(resultSet.getString("firstName"), resultSet.getString("lastName")),
+                        new Address(resultSet.getString("street"), resultSet.getString("city"), resultSet.getString("country")),
+                        resultSet.getLong("phoneNumber"),
+                        resultSet.getString("email"),
+                        resultSet.getString("pass"),
+                        resultSet.getString("accessLevel")
+                    );
+                    userDetails.put("user", user);
+
+                    return userDetails;
+                } else {
+                    // No user found with the given email and password
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     //find accessLevel after login 
     public String getUserAccessLevel(String email, String password) {
