@@ -55,12 +55,12 @@ public class AirlineReservationSystem extends JFrame {
 
         // Add the cards to the cardsPanel
         cardsPanel.add(loginPanel, LOGIN_CARD);
-        cardsPanel.add(createSignUpPanel(usc), SIGNUP_CARD);
+        cardsPanel.add(createSignUpPanel(this.usc), SIGNUP_CARD);
         cardsPanel.add(createUserNavigationPanel(), USER_NAVIGATION_CARD);
         cardsPanel.add(createRegisterPanel(), REGISTER_PANEL);
-        cardsPanel.add(createUserBrowseFlightsPanel(), USER_BROWSE_FLIGHTS_CARD);
+        cardsPanel.add(createUserBrowseFlightsPanel(this.usc), USER_BROWSE_FLIGHTS_CARD);
         cardsPanel.add(createAdminBrowseFlightsPanel(), ADMIN_BROWSE_FLIGHTS_CARD);
-        cardsPanel.add(createAdminViewPanel(adControl), ADMINVIEW_CARD);
+        cardsPanel.add(createAdminViewPanel(this.adControl), ADMINVIEW_CARD);
         // cardsPanel.add(createSeatMapPanel(), SEAT_MAP_CARD);
         // cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
 
@@ -99,7 +99,7 @@ public class AirlineReservationSystem extends JFrame {
         return new RegisterPanel();
     }
     
-    private JPanel createUserBrowseFlightsPanel() {
+    private JPanel createUserBrowseFlightsPanel(UserController usc) {
         return new BrowseUserFlightsPanel(usc);
     }
 
