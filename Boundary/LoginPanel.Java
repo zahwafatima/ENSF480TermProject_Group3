@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
  class LoginPanel extends JPanel {
-    private GuestUser gsc == null;
+    //private GuestUser gsc == null;
 
     
 
@@ -47,9 +47,10 @@ import java.awt.event.ActionListener;
 
                 }else{
                     // accessLevel.equals("admin")
-                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Admin Browse Flights Card");
-
                     JOptionPane.showMessageDialog(null, "Welcome Admin" );
+                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Admin Card");
+
+                    
 
                 }
             }

@@ -102,13 +102,62 @@ public class UserController {
         return flightsMap;
     }
 
+    // user has chosen a flight from GUI after seeing flights list from browseAllFlights, flightNum is passed
+    public void selectFlight(String flightNum) {
+        // show user the current seat map for this flight, 
+        // GUI should show which are available and not based on isBooked attribute
+        browseSeatMap(flightNum);
+        // the user should pick input a seat after seeing the seatMap, passing this value to selectSeat
+    }
+
+    // user has seen seatMap and chosen a seat, this function takes that seatNumber and changes isBooked to true in the SEAT table, 
+    // and creates a ticket for them associated with their ID, name, etc.
+    public void selectSeat(String seatNum, String flightNum, int userID) {
+        // change seat row isBooked to true
+        // SQL query to update the isBooked attribute to TRUE based on seatNumber and flightNumber
+        String updateQuery = "UPDATE SEAT SET isBooked = TRUE WHERE seatNumber = ? AND flightNumber = ?";
+
+        try (PreparedStatement updateStatement = DatabaseConnection.dbConnect.prepareStatement(updateQuery)) {
+            // Set values for the placeholders in the update query
+            updateStatement.setString(1, seatNum);
+            updateStatement.setString(2, flightNum);
+
+            // Execute the update query
+            int rowsAffected = updateStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Seat " + seatNum + " on Flight " + flightNum + " booked successfully!");
+            } else {
+                System.out.println("No matching seat found for the specified seatNumber and flightNumber.");
+            }
+
+            // create Ticket Number
+            // already have flightNum
+            // get first and last name from userID
+            
+            // already have seatNum
+            // get seatClass
+            // already have userID
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions as needed
+        }
+
+    }
+
+
 
     //returns a map of all of the seats associated with an aircraft 
-    public Map<String, Seat> browseSeatMap() {
+    public Map<String, Seat> browseSeatMap(String flightNum) {
         Map<String, Seat> seatMap = new HashMap<>();
 
-        String sql = "SELECT * FROM FLIGHTDB.SEATS";
+        String sql = "SELECT * FROM FLIGHTDB.SEATS WHERE flightNumber = ?";
         try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
+            // Set the flightNum parameter before executing the query
+            preparedStatement.setString(1, flightNum);
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     // Assuming Seat class has a constructor that takes relevant parameters
@@ -121,13 +170,16 @@ public class UserController {
                     seatMap.put(seat.getSeatNumber(), seat);
                 }
             }
-        
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return seatMap;
     }
+
+    
+
 
     public Map<String, User> getUserDetails(String email, String password) {
         Map<String, User> userDetails = new HashMap<>();

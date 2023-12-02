@@ -5,6 +5,7 @@ import javax.swing.*;
 import Boundary.BrowseAdminFlightsPanel;
 import Controller.GuestUser;
 import Controller.UserController;
+import Controller.AdminController;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 public class AirlineReservationSystem extends JFrame {
     private UserController usc;
+    private AdminController adControl;
     private GuestUser gsc;
     static CardLayout cardLayout;
     static JPanel cardsPanel; // This will contain all the "pages"
@@ -25,9 +27,11 @@ public class AirlineReservationSystem extends JFrame {
     private final String ADMIN_BROWSE_FLIGHTS_CARD = "Admin Browse Flights Card";
     private final String SEAT_MAP_CARD = "Seat Map Card";
     private final String CHECKOUT_CARD = "Checkout Card";
+    private final String ADMINVIEW_CARD = "Admin Card";
 
-    public AirlineReservationSystem(UserController usc) {
+    public AirlineReservationSystem(UserController usc, AdminController adControl) {
         this.usc = usc;
+        this.adControl = adControl;
         cardLayout = new CardLayout();
         cardsPanel = new JPanel(cardLayout);
 
@@ -40,6 +44,7 @@ public class AirlineReservationSystem extends JFrame {
         cardsPanel.add(createRegisterPanel(), REGISTER_PANEL);
         cardsPanel.add(createUserBrowseFlightsPanel(), USER_BROWSE_FLIGHTS_CARD);
         cardsPanel.add(createAdminBrowseFlightsPanel(), ADMIN_BROWSE_FLIGHTS_CARD);
+        cardsPanel.add(createAdminViewPanel(adControl), ADMINVIEW_CARD);
         // cardsPanel.add(createSeatMapPanel(), SEAT_MAP_CARD);
         // cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
 
@@ -59,9 +64,13 @@ public class AirlineReservationSystem extends JFrame {
     //     return loginPanel;
     // }
     
+    private JPanel createAdminViewPanel(AdminController adControl) {
+        // Assuming SignUpPanel has a constructor that takes no arguments
+        return new AdminViewPanel(this.adControl);
+    }
     private JPanel createSignUpPanel(UserController usc) {
         // Assuming SignUpPanel has a constructor that takes no arguments
-        return new SignUpPanel(usc);
+        return new SignUpPanel(this.usc);
     }
 
     private JPanel createUserNavigationPanel() {

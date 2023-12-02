@@ -21,12 +21,50 @@ import Entity.Name;
 import Entity.User;
 
 
-public class AdminController extends Entity.User {
+public class AdminController {
     
-    private Connection connection;
 
-    public AdminController(Connection connection) {
-        this.connection = connection;
+    public AdminController() {
+
+    }
+    //Browse all flights
+    public Map<String, Flight> browseAllFlights() {
+        Map<String, Flight> flightsMap = new HashMap<>();
+
+        String query = "SELECT * FROM FLIGHTDB.FLIGHT";
+
+        try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery()) {
+            // Process the result set
+            while (resultSet.next()) {
+                // Retrieve data from the result set and create Flight objects
+                String flightNumber = resultSet.getString("flightNumber");
+                String crewID = resultSet.getString("crewID");
+                String destCountry = resultSet.getString("destination_country");
+                String destCity = resultSet.getString("destination_city");
+                String originCountry = resultSet.getString("origin_country");
+                String originCity = resultSet.getString("origin_city");
+                int capacity = resultSet.getInt("capacity");
+                String departureDate = resultSet.getString("departureDate");
+                String arrivalDate = resultSet.getString("arrivalDate");
+                int aircraftID = resultSet.getInt("aircraftID");
+                String aircraftModel = resultSet.getString("aircraftModel");
+
+                // Create a Flight object and add it to the HashMap
+                Flight flight = new Flight(flightNumber, crewID,
+                        new Location(destCity, destCountry),
+                        new Location(originCity, originCountry),
+                        capacity, departureDate, arrivalDate,
+                        new Aircraft(aircraftID, aircraftModel, capacity));
+
+                flightsMap.put(flightNumber, flight);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error retrieving flights from the database: " + e.getMessage());
+        }
+
+        return flightsMap;
     }
 
     // Browse the list of flights, their origin and destination in a specific date.
@@ -42,7 +80,7 @@ public class AdminController extends Entity.User {
             // SQL query to retrieve flights based on departureDate
             String query = "SELECT * FROM FLIGHTDB.FLIGHT WHERE departureDate = ?";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                 // Set the value for the placeholder in the query
                 preparedStatement.setString(1, date);
 
@@ -98,7 +136,7 @@ public class AdminController extends Entity.User {
                         "WHERE f.flightNumber = ?";
 
             printTable("FLIGHT");
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                 // Set the flight number parameter in the query
                 preparedStatement.setString(1, flightNum);
 
@@ -147,7 +185,7 @@ public class AdminController extends Entity.User {
             // SQL query to retrieve all aircraft data from the AIRCRAFT table
             String query = "SELECT aircraftID, aircraftModel, capacity FROM AIRCRAFT";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
@@ -181,7 +219,7 @@ public class AdminController extends Entity.User {
             String insertQuery = "INSERT INTO CREW (crewID, pilot, copilot, flightAttendant1, flightAttendant2, flightAttendant3, flightAttendant4) " +
                                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(insertQuery)) {
                 // Step 3: Set parameters in the prepared statement
                 preparedStatement.setString(1, crewID);
                 preparedStatement.setInt(2, pilotID);
@@ -209,7 +247,7 @@ public class AdminController extends Entity.User {
             // SQL query to remove the crew based on crewID
             String removeQuery = "DELETE FROM CREW WHERE crewID = ?";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(removeQuery)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(removeQuery)) {
                 // Set the crewID parameter in the prepared statement
                 preparedStatement.setString(1, crewID);
 
@@ -241,7 +279,7 @@ public class AdminController extends Entity.User {
             // SQL query to insert an aircraft into the AIRCRAFT table
             String insertQuery = "INSERT INTO AIRCRAFT (aircraftID, aircraftModel, capacity) VALUES (?, ?, ?)";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(insertQuery)) {
                 // Set parameters in the prepared statement
                 preparedStatement.setInt(1, aircraft.getAircraftID());
                 preparedStatement.setString(2, aircraft.getModel());
@@ -265,7 +303,7 @@ public class AdminController extends Entity.User {
             // SQL query to remove an aircraft from the AIRCRAFT table based on aircraftID
             String deleteQuery = "DELETE FROM AIRCRAFT WHERE aircraftID = ?";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(deleteQuery)) {
                 // Set the aircraftID parameter in the prepared statement
                 preparedStatement.setInt(1, aircraftID);
 
@@ -303,7 +341,7 @@ public class AdminController extends Entity.User {
                 // SQL query to insert a row into the DESTINATION table
                 String query = "INSERT INTO DESTINATION (destinationID, destinationCountry, destinationCity) VALUES (?, ?, ?)";
 
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                     // Set the values for the placeholders in the query
                     preparedStatement.setInt(1, newDestinationID);
                     preparedStatement.setString(2, location.getCountry());
@@ -336,7 +374,7 @@ public class AdminController extends Entity.User {
                 // SQL query to delete a row from the DESTINATION table
                 String query = "DELETE FROM DESTINATION WHERE destinationID = ?";
 
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                     // Set the values for the placeholders in the query
                     preparedStatement.setInt(1, destinationID);
                 
@@ -378,8 +416,8 @@ public class AdminController extends Entity.User {
         String seatQuery = "INSERT INTO SEAT (seatNumber, flightNumber, seatClass, isBooked) " +
                 "VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement flightStatement = connection.prepareStatement(flightQuery);
-            PreparedStatement seatStatement = connection.prepareStatement(seatQuery)) {
+        try (PreparedStatement flightStatement = DatabaseConnection.dbConnect.prepareStatement(flightQuery);
+            PreparedStatement seatStatement = DatabaseConnection.dbConnect.prepareStatement(seatQuery)) {
 
             // Set values for the placeholders in the flight query
             flightStatement.setString(1, flight.getFlightNumber());
@@ -444,7 +482,7 @@ public class AdminController extends Entity.User {
             try {
                 // Delete TICKET records associated with the flight
                 String ticketQuery = "DELETE FROM TICKET WHERE flightNumber = ?";
-                try (PreparedStatement ticketStatement = connection.prepareStatement(ticketQuery)) {
+                try (PreparedStatement ticketStatement = DatabaseConnection.dbConnect.prepareStatement(ticketQuery)) {
                     ticketStatement.setString(1, flightNum);
                     int ticketRowsAffected = ticketStatement.executeUpdate();
                     System.out.println(ticketRowsAffected + " tickets removed.");
@@ -452,7 +490,7 @@ public class AdminController extends Entity.User {
     
                 // Delete SEAT records associated with the flight
                 String seatQuery = "DELETE FROM SEAT WHERE flightNumber = ?";
-                try (PreparedStatement seatStatement = connection.prepareStatement(seatQuery)) {
+                try (PreparedStatement seatStatement = DatabaseConnection.dbConnect.prepareStatement(seatQuery)) {
                     seatStatement.setString(1, flightNum);
                     int seatRowsAffected = seatStatement.executeUpdate();
                     System.out.println(seatRowsAffected + " seats removed.");
@@ -460,7 +498,7 @@ public class AdminController extends Entity.User {
     
                 // Finally, delete FLIGHT record
                 String flightQuery = "DELETE FROM FLIGHT WHERE flightNumber = ?";
-                try (PreparedStatement flightStatement = connection.prepareStatement(flightQuery)) {
+                try (PreparedStatement flightStatement = DatabaseConnection.dbConnect.prepareStatement(flightQuery)) {
                     flightStatement.setString(1, flightNum);
                     int flightRowsAffected = flightStatement.executeUpdate();
     
@@ -499,7 +537,7 @@ public class AdminController extends Entity.User {
                             "origin_country = ?, origin_city = ?, capacity = ?, departureDate = ?, " +
                             "arrivalDate = ?, aircraftID = ?, aircraftModel = ? WHERE flightNumber = ?";
 
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                     // Set the values for the placeholders in the query
                     preparedStatement.setString(1, flight.getCrewID());
                     preparedStatement.setString(2, flight.getDestination().getCountry());
@@ -540,7 +578,7 @@ public class AdminController extends Entity.User {
             // SQL query to retrieve registered users from the USERS table
             String query = "SELECT userID, firstName, lastName, street, city, country, email, pass, phoneNumber, accessLevel FROM USERS WHERE isRegistered = true";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()) {
@@ -583,7 +621,7 @@ public class AdminController extends Entity.User {
     private boolean aircraftExists(int aircraftID) {
         // try (Connection connection = db.getConnection()) {
             String checkQuery = "SELECT COUNT(*) FROM AIRCRAFT WHERE aircraftID = ?";
-            try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
+            try (PreparedStatement checkStatement = DatabaseConnection.dbConnect.prepareStatement(checkQuery)) {
                 checkStatement.setInt(1, aircraftID);
                 try (ResultSet resultSet = checkStatement.executeQuery()) {
                     resultSet.next();
@@ -635,7 +673,7 @@ public class AdminController extends Entity.User {
             // SQL query to check if the destinationID exists in the DESTINATION table
             String query = "SELECT COUNT(*) FROM DESTINATION WHERE destinationID = ?";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                 preparedStatement.setInt(1, destinationID);
 
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -661,7 +699,7 @@ public class AdminController extends Entity.User {
             // SQL query to check if the crewID exists in the CREW table
             String query = "SELECT COUNT(*) FROM CREW WHERE crewID = ?";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                 preparedStatement.setString(1, crewID);
 
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -681,7 +719,7 @@ public class AdminController extends Entity.User {
     private boolean destinationExists(String country, String city) {
         // try (Connection connection = db.getConnection()) {
             String checkQuery = "SELECT COUNT(*) FROM DESTINATION WHERE destinationCountry = ? AND destinationCity = ?";
-            try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
+            try (PreparedStatement checkStatement = DatabaseConnection.dbConnect.prepareStatement(checkQuery)) {
                 checkStatement.setString(1, country);
                 checkStatement.setString(2, city);
                 try (ResultSet resultSet = checkStatement.executeQuery()) {
@@ -700,7 +738,7 @@ public class AdminController extends Entity.User {
     private boolean flightExists(String flightNumber) {
         // try (Connection connection = db.getConnection()) {
             String checkQuery = "SELECT COUNT(*) FROM FLIGHT WHERE flightNumber = ?";
-            try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
+            try (PreparedStatement checkStatement = DatabaseConnection.dbConnect.prepareStatement(checkQuery)) {
                 checkStatement.setString(1, flightNumber);
                 try (ResultSet resultSet = checkStatement.executeQuery()) {
                     resultSet.next();
@@ -719,7 +757,7 @@ public class AdminController extends Entity.User {
             String query = "SELECT * FROM AIRCRAFT WHERE aircraftID = ?";
             Aircraft aircraft = null;
         
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
                 preparedStatement.setInt(1, aircraftID);
         
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -747,7 +785,7 @@ public class AdminController extends Entity.User {
     public void printTable(String tableName) {
             String query = "SELECT * FROM " + tableName;
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+            try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
 
                 // Get column names
@@ -776,7 +814,7 @@ public class AdminController extends Entity.User {
         // SQL query to retrieve user information based on userID
         String query = "SELECT firstName, lastName, accessLevel FROM USERS WHERE userID = ?";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
             preparedStatement.setInt(1, userID);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
