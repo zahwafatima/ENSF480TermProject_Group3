@@ -5,6 +5,7 @@ import Controller.UserController;
 import Entity.Location;
 import Entity.Flight;
 import Entity.Aircraft;
+import Entity.Seat;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,9 +15,12 @@ import javax.swing.table.DefaultTableModel;
 import Boundary.BrowseAdminFlightsPanel;
 
 public class BrowseUserFlightsPanel extends JPanel {
+    public static String flightSelected;
+    Map<String, Seat> seatMap;
     private JButton bookButton;
     private JButton refreshButton;
     private UserController usc;
+    
     
 
     public BrowseUserFlightsPanel(UserController usc) {
@@ -59,9 +63,11 @@ public class BrowseUserFlightsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = flightTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    String selectedFlight = (String) flightTable.getValueAt(selectedRow, 0);
+                    flightSelected = (String) flightTable.getValueAt(selectedRow, 0);
                     JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseUserFlightsPanel.this),
-                            "You have booked " + selectedFlight);
+                            "You have booked " + flightSelected);
+                            AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Seat Map Card");
+                            //seatMap = usc.browseSeatMap(flightSelected);
                             // Implement your logic for booking the flight here
                 } else {
                     JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(BrowseUserFlightsPanel.this),

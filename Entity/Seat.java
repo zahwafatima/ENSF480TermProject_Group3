@@ -6,7 +6,7 @@ public class Seat {
     private boolean isBooked;
 
     // Constructor
-    public Seat(String seatNumber, String seatClass, boolean isBooked, double price) {
+    public Seat(String seatNumber, String seatClass, boolean isBooked) {
         this.seatNumber = seatNumber;
         this.seatClass = seatClass;
         this.isBooked = false; // Initialize as not booked

@@ -61,8 +61,8 @@ public class AirlineReservationSystem extends JFrame {
         cardsPanel.add(createUserBrowseFlightsPanel(this.usc), USER_BROWSE_FLIGHTS_CARD);
         cardsPanel.add(createAdminBrowseFlightsPanel(), ADMIN_BROWSE_FLIGHTS_CARD);
         cardsPanel.add(createAdminViewPanel(this.adControl), ADMINVIEW_CARD);
-        // cardsPanel.add(createSeatMapPanel(), SEAT_MAP_CARD);
-        // cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
+        cardsPanel.add(createSeatMapPanel(this.usc), SEAT_MAP_CARD);
+         cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
 
         // Show the initial card.
         cardLayout.show(cardsPanel, LOGIN_CARD);
@@ -87,7 +87,7 @@ public class AirlineReservationSystem extends JFrame {
     }
     private JPanel createSignUpPanel(UserController usc) {
         // Assuming SignUpPanel has a constructor that takes no arguments
-        return new SignUpPanel(this.usc);
+        return new SignUpPanel(usc);
     }
 
     private JPanel createUserNavigationPanel() {
@@ -107,9 +107,9 @@ public class AirlineReservationSystem extends JFrame {
         return new BrowseAdminFlightsPanel(usc);
     }
     
-    private JPanel createSeatMapPanel() {
+    private JPanel createSeatMapPanel(UserController usc) {
         // Assuming SeatMapPanel has a constructor that takes no arguments
-        return new SeatMapPanel();
+        return new SeatMapPanel(usc);
     }
     
     private JPanel createCheckoutPanel() {

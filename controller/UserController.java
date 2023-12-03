@@ -203,7 +203,7 @@ public class UserController {
     public Map<String, Seat> browseSeatMap(String flightNum) {
         Map<String, Seat> seatMap = new HashMap<>();
 
-        String sql = "SELECT * FROM FLIGHTDB.SEATS WHERE flightNumber = ?";
+        String sql = "SELECT * FROM SEAT WHERE flightNumber = ?";
         try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
             // Set the flightNum parameter before executing the query
             preparedStatement.setString(1, flightNum);
@@ -214,8 +214,8 @@ public class UserController {
                     Seat seat = new Seat(
                             resultSet.getString("seatNumber"),
                             resultSet.getString("seatClass"),
-                            resultSet.getBoolean("isBooked"),
-                            resultSet.getDouble("price")
+                            resultSet.getBoolean("isBooked")
+                            //resultSet.getDouble("price")
                     );
                     seatMap.put(seat.getSeatNumber(), seat);
                 }
@@ -223,6 +223,15 @@ public class UserController {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        for (Map.Entry<String, Seat> entry : seatMap.entrySet()) {
+            String seatNumber = entry.getKey();
+            Seat seat = entry.getValue();
+            //String seatStatus = seat.isBooked() ? "Booked" : "Available";
+            String seatClass = seat.getSeatClass();
+            double price = 50;
+    
+            System.out.println("Seat Number: " + seatNumber + ", Class: " + seatClass + ", Status: "  + ", Price: " + price);
         }
 
         return seatMap;
