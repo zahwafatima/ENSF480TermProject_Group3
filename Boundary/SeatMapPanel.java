@@ -45,38 +45,38 @@ public class SeatMapPanel extends JPanel {
         
     }
 
-    private void createSeats(JDialog dialog) {
-        for (Map.Entry<String, Seat> entry : this.seatMap.entrySet()) {
-            String seatNumber = entry.getKey();
-            this.seat = entry.getValue();
+    // private void createSeats(JDialog dialog) {
+    //     for (Map.Entry<String, Seat> entry : this.seatMap.entrySet()) {
+    //         String seatNumber = entry.getKey();
+    //         this.seat = entry.getValue();
 
-            JButton seatButton = new JButton(seat.getSeatNumber());
-            seatButton.addActionListener((ActionEvent e) -> {
-                JButton source = (JButton) e.getSource();
-                seatString = source.getText();
+    //         JButton seatButton = new JButton(seat.getSeatNumber());
+    //         seatButton.addActionListener((ActionEvent e) -> {
+    //             JButton source = (JButton) e.getSource();
+    //             seatString = source.getText();
 
-                int confirm = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(this),
-                        "Do you want to book seat " + seatNumber + "?",
-                        "Confirm Seat", JOptionPane.YES_NO_OPTION);
+    //             int confirm = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(this),
+    //                     "Do you want to book seat " + seatNumber + "?",
+    //                     "Confirm Seat", JOptionPane.YES_NO_OPTION);
 
-                if (confirm == JOptionPane.YES_OPTION) {
-                    source.setEnabled(false); // Simulate booking the seat by disabling the button
-                    source.setBackground(Color.RED); // Change color to indicate booking
-                    source.setText(seat + " - Booked");
-                }
-            });
+    //             if (confirm == JOptionPane.YES_OPTION) {
+    //                 source.setEnabled(false); // Simulate booking the seat by disabling the button
+    //                 source.setBackground(Color.RED); // Change color to indicate booking
+    //                 source.setText(seat + " - Booked");
+    //             }
+    //         });
 
-            if (this.seat.isBooked()) {
-                System.out.println("hi");
+    //         if (this.seat.isBooked()) {
+    //             System.out.println("hi");
 
-                seatButton.setEnabled(false); // Disable the button if the seat is already booked
-                seatButton.setBackground(Color.RED); // Change color to indicate booking
-            }
+    //             seatButton.setEnabled(false); // Disable the button if the seat is already booked
+    //             seatButton.setBackground(Color.RED); // Change color to indicate booking
+    //         }
 
-            add(seatButton);
-            seatButtons.put(seat.getSeatNumber(), seatButton);
-        }
-    }
+    //         add(seatButton);
+    //         seatButtons.put(seat.getSeatNumber(), seatButton);
+    //     }
+    // }
 
             
                 
@@ -118,18 +118,21 @@ public class SeatMapPanel extends JPanel {
         dialog.setLayout(new GridLayout(0, 2));
         dialog.setSize(300, 400); // Set the size of the dialog
         dialog.setLocationRelativeTo(this);
-
+        JButton seatButton;
         for (Map.Entry<String, Seat> entry : this.seatMap.entrySet()) {
             String seatNumber = entry.getKey();
             Seat seat = entry.getValue();
-            JButton seatButton = new JButton(seat.getSeatNumber());
+           
 
             if (seat.isBooked()) {
                 System.out.println("hi");
-
+                seatButton = new JButton("booked");
                 seatButton.setEnabled(false); // Disable the button if the seat is already booked
                 seatButton.setBackground(Color.RED); // Change color to indicate booking
-            }
+            }else{seatButton = new JButton("booked");
+            seatButton.setBackground(Color.RED);
+            seatButton.setOpaque(isOpaque());
+        }
 
             seatButton.addActionListener((ActionEvent e) -> {
                 JButton source = (JButton) e.getSource();
