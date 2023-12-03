@@ -40,6 +40,26 @@ public class MemberUser extends User{
     //         }
     //     }
 
+    //                     // fullPrice = (int) Math.round(orgPrice * (1 - price.getDiscountPercent() / 100.0));
+
+    //                     // //at beginning of class
+    //                     // Private int discountPrecentage;
+
+    //                     // //within the class after user has entered the promoID
+    //                     // this.discountPercent = gsc.getDiscountPercentage(promoID)
+
+
+    //                     // // function with promo calc
+    //                     // private void updateTotalCost() {
+    //                     //     int totalCost =  ticketPrice;
+    //                     //     totalCost = (int) Math.round(ticketPrice * (1 - this.discountPrecentage / 100.0));
+    //                     //     if (insuranceCheckbox.isSelected()) {
+    //                     //         totalCost +=  insurancePrice;
+    //                     //     }
+    //                     //     totalCostLabel.setText("Total Cost: $" + totalCost);
+    //                     // }
+
+
     //     return fullPrice;
     // }
     

@@ -11,8 +11,8 @@ public class Ticket {
     private int price;
     private Seat seat;
 
-    // Static map to store flightNumber-price associations
-    private static final Map<Flight, Integer> flightPrices = new HashMap<>();
+
+
 
     // Constructor
     public Ticket(String ticketNumber, Flight flight, User passenger, Seat seat) {
@@ -22,18 +22,18 @@ public class Ticket {
         this.passenger = passenger;
 
         // Check if the flightNumber already has a price assigned
-        if (!flightPrices.containsKey(flight)) {
-            // If not, generate a new random price and associate it with the flightNumber
-            Random random = new Random();
-            int newPrice = random.nextInt(501) + 200;
-            if (seat.getSeatClass().equals("First Class")){
-                newPrice *= 1.4;
-            } else if(seat.getSeatClass().equals("Business Class")){
-                newPrice *= 2;
-            }
-            flightPrices.put(flight, newPrice);
-        }
-        this.price = flightPrices.get(flight);
+        // if (!flightPrices.containsKey(flight)) {
+        //     // If not, generate a new random price and associate it with the flightNumber
+        //     Random random = new Random();
+        //     int newPrice = random.nextInt(501) + 200;
+        //     if (seat.getSeatClass().equals("First Class")){
+        //         newPrice *= 1.4;
+        //     } else if(seat.getSeatClass().equals("Business Class")){
+        //         newPrice *= 2;
+        //     }
+        //     flightPrices.put(flight, newPrice);
+        // }
+        // this.price = flightPrices.get(flight);
     }
 
 

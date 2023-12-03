@@ -111,11 +111,11 @@ CREATE TABLE TICKET (
 
 
 CREATE TABLE PROMOS(
-    promoID INT; 
-    discountPrecent INT; 
-    promoDateStart DATE;
-    promoDateEnd DATE;
-    PRMARY KEY (promoID);
+    promoID INT, 
+    discountPrecent INT, 
+    promoDateStart DATE,
+    promoDateEnd DATE,
+    PRIMARY KEY (promoID)
 );
 
 -- Inserting data into USERS table
@@ -405,9 +405,6 @@ VALUES
     (1003, 30, '2023-11-15', '2023-12-15'),
     (1004, 10, '2023-11-20', '2023-12-20'),
     (1005, 5, '2023-11-25', '2023-12-25');
-
-
-;
 
 
 -- ALTER TABLE FLIGHT

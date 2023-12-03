@@ -45,57 +45,6 @@ public class SeatMapPanel extends JPanel {
         
     }
 
-    // private void createSeats(JDialog dialog) {
-    //     for (Map.Entry<String, Seat> entry : this.seatMap.entrySet()) {
-    //         String seatNumber = entry.getKey();
-    //         this.seat = entry.getValue();
-
-    //         JButton seatButton = new JButton(seat.getSeatNumber());
-    //         seatButton.addActionListener((ActionEvent e) -> {
-    //             JButton source = (JButton) e.getSource();
-    //             seatString = source.getText();
-
-    //             int confirm = JOptionPane.showConfirmDialog(SwingUtilities.getWindowAncestor(this),
-    //                     "Do you want to book seat " + seatNumber + "?",
-    //                     "Confirm Seat", JOptionPane.YES_NO_OPTION);
-
-    //             if (confirm == JOptionPane.YES_OPTION) {
-    //                 source.setEnabled(false); // Simulate booking the seat by disabling the button
-    //                 source.setBackground(Color.RED); // Change color to indicate booking
-    //                 source.setText(seat + " - Booked");
-    //             }
-    //         });
-
-    //         if (this.seat.isBooked()) {
-    //             System.out.println("hi");
-
-    //             seatButton.setEnabled(false); // Disable the button if the seat is already booked
-    //             seatButton.setBackground(Color.RED); // Change color to indicate booking
-    //         }
-
-    //         add(seatButton);
-    //         seatButtons.put(seat.getSeatNumber(), seatButton);
-    //     }
-    // }
-
-            
-                
-
-                // if(seatMap.containsKey(seatId)){
-                //     // if (seatMap.get(seatId).isBooked()) {
-                //     // seatButton.setEnabled(false); // Disable if booked
-                //     seatButton.setBackground(Color.RED); // Change color
-                //  }
-                // // else {seatButton.setBackground(Color.GREEN);}
-                // // }
-
-                // seatButton.addActionListener((ActionEvent e) -> {
-                //     // Your existing action listener code
-                // });
-
-                // add(seatButton);
-                // seatButtons.put(seatId, seatButton);
-            
     public void printSeatMap() {
         for (Map.Entry<String, Seat> entry : this.seatMap.entrySet()) {
             String seatNumber = entry.getKey();
@@ -124,7 +73,7 @@ public class SeatMapPanel extends JPanel {
             Seat seat = entry.getValue();
            
 
-            if (seat.isBooked()) {
+            if (!seat.isBooked()) {
                 System.out.println("hi");
                 seatButton = new JButton("booked");
                 seatButton.setEnabled(false); // Disable the button if the seat is already booked

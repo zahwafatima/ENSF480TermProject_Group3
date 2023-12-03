@@ -47,10 +47,11 @@ import Controller.GuestUser;
                 if ( accessLevel.equals("noUser")) {
                     JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
 
-                }else if(accessLevel.equals("customer") || accessLevel.equals("crew")){
+                }else if(accessLevel.equals("customer")){
                     JOptionPane.showMessageDialog(null, "Welcome User" );
-                    //guestUser = (GuestUser) userController.getUserDetails(username, passwordString);
+
                     System.out.println(userController.getRegisterAccessLevel(username, passwordString));
+                    
                     if (userController.getRegisterAccessLevel(username, passwordString)==true){
                     
                         AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "User Browse Flights Card");
@@ -59,6 +60,13 @@ import Controller.GuestUser;
             
                     
 
+                }else if( accessLevel.equals("crew")){
+
+                    JOptionPane.showMessageDialog(null, "Welcome User" );
+
+                    System.out.println(userController.getRegisterAccessLevel(username, passwordString));
+                    
+                    AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Crew flight Card");
                 }else{
                     // accessLevel.equals("admin")
                     JOptionPane.showMessageDialog(null, "Welcome Admin" );

@@ -16,7 +16,7 @@ public class AirlineUser {
     
     private Connection connection;
 
-    public AirlineUser(Connection connection) {
+    public AirlineUser() {
         this.connection = connection;
     }
     

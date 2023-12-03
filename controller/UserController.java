@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -401,10 +402,11 @@ public class UserController {
             String seatNumber = entry.getKey();
             Seat seat = entry.getValue();
             //String seatStatus = seat.isBooked() ? "Booked" : "Available";
+            boolean booked = seat.isBooked();
             String seatClass = seat.getSeatClass();
             double price = 50;
     
-            System.out.println("Seat Number: " + seatNumber + ", Class: " + seatClass + ", Status: "  + ", Price: " + seatNumber + ", Class: ");
+            System.out.println("Seat Number: " + seatNumber + ", Class: " + seatClass + ", Status: "  + ", Price: " + seatNumber + ", isBooked: "+ booked);
         }
 
         return seatMap;
@@ -679,6 +681,80 @@ public boolean setUserRegistered(String email, String password) {
 
         return false; // Return false in case of exceptions or if the query fails
     }
+
+    public static int getDiscountPercentage(int promoID) {
+        int discountPercentage = -1; // Set a default value that indicates no promo found
+    
+        // SQL query to select discount percentage based on promoID
+        String selectQuery = "SELECT discountPrecent FROM PROMOS WHERE promoID = ?";
+    
+        try (Connection connection = DatabaseConnection.dbConnect;
+             PreparedStatement selectStatement = DatabaseConnection.dbConnect.prepareStatement(selectQuery)) {
+    
+            // Set values for the placeholders in the select query
+            selectStatement.setInt(1, promoID);
+            // Assuming current date as the second placeholder
+            selectStatement.setDate(2, new java.sql.Date(new Date().getTime()));
+    
+            // Execute the select query
+            try (ResultSet resultSet = selectStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    discountPercentage = resultSet.getInt("discountPrecent");
+                } else {
+                    // No promo found
+                    System.out.println("No Promo Found for promoID: " + promoID);
+                }
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return discountPercentage;
+    }
+
+        
+    public Map<String, List<String>> browsePassengers(String flightNum) {
+        Map<String, List<String>> passengerMap = new HashMap<>();
+
+        // Assuming you have a valid Connection object named "connection" from DatabaseConnection.getConnection()
+        // try (Connection connection = db.getConnection()) {
+        // SQL query to retrieve ticket information for a specific flight
+        String query = "SELECT * FROM TICKET WHERE flightNumber = ?";
+
+        try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(query)) {
+            // Set the flight number parameter in the query
+            preparedStatement.setString(1, flightNum);
+
+            // Execute the query
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Process the result set
+            while (resultSet.next()) {
+                // Retrieve ticket information
+                String ticketNumber = resultSet.getString("ticketNumber");
+                String passengerFirstName = resultSet.getString("passenger_fName");
+                String passengerLastName = resultSet.getString("passenger_lName");
+                String seatNumber = resultSet.getString("seatNumber");
+                String seatClass = resultSet.getString("seatClass");
+                int userID = resultSet.getInt("userID");
+
+                // Create a list of passenger details
+                List<String> passengerDetails = Arrays.asList(
+                        ticketNumber, passengerFirstName, passengerLastName, seatNumber, seatClass, String.valueOf(userID));
+
+                // Add the passenger details to the HashMap using ticketNumber as the key
+                passengerMap.put(ticketNumber, passengerDetails);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions as needed
+        }
+
+        return passengerMap;
+    }
+    
     
 }
 
