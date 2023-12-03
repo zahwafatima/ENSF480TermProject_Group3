@@ -128,9 +128,10 @@ public class SeatMapPanel extends JPanel {
                 System.out.println("hi");
                 seatButton = new JButton("booked");
                 seatButton.setEnabled(false); // Disable the button if the seat is already booked
-                seatButton.setBackground(Color.RED); // Change color to indicate booking
-            }else{seatButton = new JButton("booked");
-            seatButton.setBackground(Color.RED);
+                seatButton.setBackground(Color.RED);
+                seatButton.setOpaque(isOpaque()); // Change color to indicate booking
+            }else{seatButton = new JButton(seatNumber);
+            seatButton.setBackground(Color.GREEN);
             seatButton.setOpaque(isOpaque());
         }
 
@@ -159,6 +160,7 @@ public class SeatMapPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AirlineReservationSystem.cardLayout.show(AirlineReservationSystem.cardsPanel, "Checkout Card");
+                dialog.dispose();
             }
         });
 

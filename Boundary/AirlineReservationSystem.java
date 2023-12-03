@@ -62,7 +62,7 @@ public class AirlineReservationSystem extends JFrame {
         cardsPanel.add(createAdminBrowseFlightsPanel(), ADMIN_BROWSE_FLIGHTS_CARD);
         cardsPanel.add(createAdminViewPanel(this.adControl), ADMINVIEW_CARD);
         cardsPanel.add(createSeatMapPanel(this.usc), SEAT_MAP_CARD);
-         cardsPanel.add(createCheckoutPanel(), CHECKOUT_CARD);
+         cardsPanel.add(createCheckoutPanel(this.usc), CHECKOUT_CARD);
 
         // Show the initial card.
         cardLayout.show(cardsPanel, LOGIN_CARD);
@@ -112,10 +112,10 @@ public class AirlineReservationSystem extends JFrame {
         return new SeatMapPanel(usc);
     }
     
-    private JPanel createCheckoutPanel() {
+    private JPanel createCheckoutPanel(UserController usc) {
         Set<String> selectedSeats = new HashSet<>();
         // Assuming you will pass the actual selected seats to the constructor
-        return new CheckoutPanel(selectedSeats);
+        return new CheckoutPanel(usc);
     }
 
 }
