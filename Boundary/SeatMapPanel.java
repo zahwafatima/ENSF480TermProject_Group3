@@ -89,7 +89,7 @@ public class SeatMapPanel extends JPanel {
                 seatString = source.getText();
 
                 // Add your if statement here
-                if (!seat.isBooked()) { // Check if the seat is not already booked
+                if (seat.isBooked()) { // Check if the seat is not already booked
                     source.setEnabled(false); // Simulate booking the seat by disabling the button
                     source.setBackground(Color.RED); // Change color to indicate booking
                     source.setText(seat + " - Booked");

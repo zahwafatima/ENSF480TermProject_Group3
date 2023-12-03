@@ -141,12 +141,11 @@ public class UserController {
 
     // user has seen seatMap and chosen a seat, this function takes that seatNumber and changes isBooked to true in the SEAT table, 
     // and creates a ticket for them associated with their ID, name, etc.
-<<<<<<< Updated upstream
 
 
     // user has seen seatMap and chosen a seat, this function takes that seatNumber and changes isBooked to true in the SEAT table, 
     // and creates a ticket for them associated with their ID, name, etc.
-    public void generateTicket(String seatNum, String flightNum, int userID) {
+    public void generateTicket(String seatNum, String flightNum) {
         // change seat row isBooked to true
         // SQL query to update the isBooked attribute to TRUE based on seatNumber and flightNumber
         String updateQuery = "UPDATE SEAT SET isBooked = TRUE WHERE seatNumber = ? AND flightNumber = ?";
@@ -164,89 +163,14 @@ public class UserController {
             } else {
                 System.out.println("No matching seat found for the specified seatNumber and flightNumber.");
             }
-=======
-     public void generateTicket(String seatNum, String flightNum) {
-        // change seat row isBooked to true
-        // SQL query to update the isBooked attribute to TRUE based on seatNumber and flightNumber
-        String updateQuery = "UPDATE SEAT SET isBooked = TRUE WHERE seatNumber = ? AND flightNumber = ?";
->>>>>>> Stashed changes
 
-        try (PreparedStatement updateStatement = DatabaseConnection.dbConnect.prepareStatement(updateQuery)) {
-            // Set values for the placeholders in the update query
-            updateStatement.setString(1, seatNum);
-            updateStatement.setString(2, flightNum);
-
-            // Execute the update query
-            int rowsAffected = updateStatement.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("Seat " + seatNum + " on Flight " + flightNum + " booked successfully!");
-            } else {
-                System.out.println("No matching seat found for the specified seatNumber and flightNumber.");
-            }
-            
-<<<<<<< Updated upstream
-            // already have seatNum
-            // get seatClass
-            // already have userID
-
-            // Create Ticket Number
-            String ticketNumber = generateUniqueTicketNumber();
-
-            // Get user information from USERS table
-            String userQuery = "SELECT firstName, lastName FROM USERS WHERE userID = ?";
-            try (PreparedStatement userStatement = DatabaseConnection.dbConnect.prepareStatement(userQuery)) {
-                userStatement.setInt(1, userID);
-                ResultSet userResultSet = userStatement.executeQuery();
-
-                if (userResultSet.next()) {
-                    String passengerFirstName = userResultSet.getString("firstName");
-                    String passengerLastName = userResultSet.getString("lastName");
-
-                    // Get seatClass from SEAT table
-                    String seatClassQuery = "SELECT seatClass FROM SEAT WHERE seatNumber = ? AND flightNumber = ?";
-                    try (PreparedStatement seatClassStatement = DatabaseConnection.dbConnect.prepareStatement(seatClassQuery)) {
-                        seatClassStatement.setString(1, seatNum);
-                        seatClassStatement.setString(2, flightNum);
-                        ResultSet seatClassResultSet = seatClassStatement.executeQuery();
-
-                        if (seatClassResultSet.next()) {
-                            String seatClass = seatClassResultSet.getString("seatClass");
-
-                            // Insert the ticket into the TICKET table
-                            String insertTicketQuery = "INSERT INTO TICKET (ticketNumber, flightNumber, passenger_fName, passenger_lName, seatNumber, seatClass, userID) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                            try (PreparedStatement insertTicketStatement = DatabaseConnection.dbConnect.prepareStatement(insertTicketQuery)) {
-                                insertTicketStatement.setString(1, ticketNumber);
-                                insertTicketStatement.setString(2, flightNum);
-                                insertTicketStatement.setString(3, passengerFirstName);
-                                insertTicketStatement.setString(4, passengerLastName);
-                                insertTicketStatement.setString(5, seatNum);
-                                insertTicketStatement.setString(6, seatClass);
-                                insertTicketStatement.setInt(7, userID);
-
-                                int rowsInserted = insertTicketStatement.executeUpdate();
-
-                                if (rowsInserted > 0) {
-                                    System.out.println("Ticket " + ticketNumber + " created successfully!");
-                                } else {
-                                    System.out.println("Failed to create ticket.");
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                // Handle exceptions as needed
-            }
-=======
->>>>>>> Stashed changes
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle exceptions as needed
         }
-
     }
+
+    
 
 
     public List<Ticket> getUserTickets(int userID) {
@@ -488,36 +412,7 @@ public boolean setUserRegistered(String email, String password) {
             }
     return "Error retrieving user access level";
     }
-    public int getDiscountPercentage(int promoID) {
-        int discountPercentage = -1; // Set a default value that indicates no promo found
-    
-        // SQL query to select discount percentage based on promoID
-        String selectQuery = "SELECT discountPrecent FROM PROMOS WHERE promoID = ?";
-    
-        try (Connection connection = DatabaseConnection.dbConnect;
-             PreparedStatement selectStatement = connection.prepareStatement(selectQuery)) {
-    
-            // Set values for the placeholders in the select query
-            selectStatement.setInt(1, promoID);
-            // Assuming current date as the second placeholder
-           // selectStatement.setDate(2, new java.sql.Date(new Date().getTime()));
-    
-            // Execute the select query
-            try (ResultSet resultSet = selectStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    discountPercentage = resultSet.getInt("discountPrecent");
-                } else {
-                    // No promo found
-                    System.out.println("No Promo Found for promoID: " + promoID);
-                }
-            }
-    
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    
-        return discountPercentage;
-    }
+
     public int getUserID(String email, String password) {
         int userID = 0;
         String sql = "SELECT userID FROM USERS WHERE email = ? AND pass = ?";
