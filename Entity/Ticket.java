@@ -16,10 +16,10 @@ public class Ticket {
 
     // Constructor
     public Ticket(String ticketNumber, Flight flight, User passenger, Seat seat) {
-        this.ticketNumber = generateRandomTicketNumber();
+        this.ticketNumber = ticketNumber;
         this.flight = flight;
-        this.passenger = passenger;
         this.seat = seat;
+        this.passenger = passenger;
 
         // Check if the flightNumber already has a price assigned
         if (!flightPrices.containsKey(flight)) {
@@ -36,11 +36,6 @@ public class Ticket {
         this.price = flightPrices.get(flight);
     }
 
-    private String generateRandomTicketNumber() {
-        Random random = new Random();
-        int randomNumber = random.nextInt(9000) + 1000; // Random number between 1000 and 9999
-        return "T" + randomNumber;
-    }
 
     // Getters
     public int getPrice() {

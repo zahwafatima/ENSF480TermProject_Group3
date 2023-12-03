@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Date;
@@ -112,10 +113,8 @@ public class UserController {
         // the user should pick input a seat after seeing the seatMap, passing this value to selectSeat
     }
 
-    // user has seen seatMap and chosen a seat, this function takes that seatNumber and changes isBooked to true in the SEAT table, 
-    // and creates a ticket for them associated with their ID, name, etc.
-    public void selectSeat(String seatNum, String flightNum, int userID) {
-        // change seat row isBooked to true
+    public void makePayment(String seatNum, String flightNum, int userID) {
+   
         // SQL query to update the isBooked attribute to TRUE based on seatNumber and flightNumber
         String updateQuery = "UPDATE SEAT SET isBooked = TRUE WHERE seatNumber = ? AND flightNumber = ?";
 
@@ -132,6 +131,16 @@ public class UserController {
             } else {
                 System.out.println("No matching seat found for the specified seatNumber and flightNumber.");
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // user has seen seatMap and chosen a seat, this function takes that seatNumber and changes isBooked to true in the SEAT table, 
+    // and creates a ticket for them associated with their ID, name, etc.
+    public void generateTicket(String seatNum, String flightNum, int userID) {
 
             // create Ticket Number
             // already have flightNum
@@ -189,13 +198,132 @@ public class UserController {
             } catch (SQLException e) {
                 e.printStackTrace();
                 // Handle exceptions as needed
+            
+        } 
+
+    }
+
+    public List<Ticket> getUserTickets(int userID) {
+        List<Ticket> userTickets = new ArrayList<>();
+
+        // SQL query to retrieve tickets based on userID
+        String query = "SELECT * FROM TICKET WHERE userID = ?";
+        try (PreparedStatement statement = DatabaseConnection.dbConnect.prepareStatement(query)) {
+            statement.setInt(1, userID);
+            ResultSet resultSet = statement.executeQuery();
+
+            // Iterate over the result set and create Ticket objects
+            while (resultSet.next()) {
+                String ticketNumber = resultSet.getString("ticketNumber");
+                String flightNumber = resultSet.getString("flightNumber");
+                String seatNumber = resultSet.getString("seatNumber");
+
+                // Retrieve flight information
+                Flight flight = getFlightInformation(flightNumber);
+
+                // Retrieve seat information
+                Seat seat = getSeatInformation(seatNumber);
+
+                // Retrieve user information (passenger)
+                User passenger = getUserInformation(userID);
+
+                // Create Ticket object and add it to the list
+                Ticket ticket = new Ticket(ticketNumber, flight, passenger, seat);
+                userTickets.add(ticket);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle exceptions as needed
         }
 
+        return userTickets;
     }
+
+    private Flight getFlightInformation(String flightNumber) throws SQLException {
+        // Retrieve flight information from the database based on flightNumber
+        String flightQuery = "SELECT * FROM FLIGHT WHERE flightNumber = ?";
+        try (PreparedStatement flightStatement = DatabaseConnection.dbConnect.prepareStatement(flightQuery)) {
+            flightStatement.setString(1, flightNumber);
+            ResultSet flightResultSet = flightStatement.executeQuery();
+    
+            if (flightResultSet.next()) {
+    
+                // Retrieve data from the result set and create Flight objects
+                String crewID = flightResultSet.getString("crewID");
+                String destCountry = flightResultSet.getString("destination_country");
+                String destCity = flightResultSet.getString("destination_city");
+                String originCountry = flightResultSet.getString("origin_country");
+                String originCity = flightResultSet.getString("origin_city");
+                int capacity = flightResultSet.getInt("capacity");
+                String departureDate = flightResultSet.getString("departureDate");
+                String arrivalDate = flightResultSet.getString("arrivalDate");
+                int aircraftID = flightResultSet.getInt("aircraftID");
+                String aircraftModel = flightResultSet.getString("aircraftModel");
+    
+                // Create a Flight object and add it to the HashMap
+                return new Flight(flightNumber, crewID,
+                        new Location(destCity, destCountry),
+                        new Location(originCity, originCountry),
+                        capacity, departureDate, arrivalDate,
+                        new Aircraft(aircraftID, aircraftModel, capacity));
+            }
+        }
+    
+        return null; // Handle appropriately if flight information is not found
+    }
+    
+
+    private Seat getSeatInformation(String seatNumber) throws SQLException {
+        // Retrieve seat information from the database based on seatNumber
+        String seatQuery = "SELECT * FROM SEAT WHERE seatNumber = ?";
+        try (PreparedStatement seatStatement = DatabaseConnection.dbConnect.prepareStatement(seatQuery)) {
+            seatStatement.setString(1, seatNumber);
+            ResultSet seatResultSet = seatStatement.executeQuery();
+
+            if (seatResultSet.next()) {
+                // Construct and return a Seat object
+                return new Seat(
+                        seatResultSet.getString("seatNumber"),
+                        seatResultSet.getString("seatClass"),
+                        seatResultSet.getBoolean("isBooked")
+                );
+            }
+        }
+
+        return null; 
+    }
+
+
+    public User getUserInformation(int userID) {
+        
+        String userQuery = "SELECT * FROM USERS WHERE userID = ?";
+        try (PreparedStatement userStatement = DatabaseConnection.dbConnect.prepareStatement(userQuery)) {
+            userStatement.setInt(1, userID);
+
+            try (ResultSet resultSet = userStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    // User found, create a User object with user details
+                    return new User(
+                        resultSet.getInt("userID"),
+                        resultSet.getBoolean("isRegistered"),
+                        new Name(resultSet.getString("firstName"), resultSet.getString("lastName")),
+                        new Address(resultSet.getString("street"), resultSet.getString("city"), resultSet.getString("country")),
+                        resultSet.getLong("phoneNumber"),
+                        resultSet.getString("email"),
+                        resultSet.getString("pass"),
+                        resultSet.getString("accessLevel")
+                    );
+                } else {
+                // No user found with the given email and password
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+}
 
 
 
@@ -214,9 +342,9 @@ public class UserController {
                     Seat seat = new Seat(
                             resultSet.getString("seatNumber"),
                             resultSet.getString("seatClass"),
-                            resultSet.getBoolean("isBooked")
+                            resultSet.getBoolean("isBooked"));
                             //resultSet.getDouble("price")
-                    );
+                    
                     seatMap.put(seat.getSeatNumber(), seat);
                 }
             }
@@ -270,36 +398,8 @@ public class UserController {
     }
 
     
-public GuestUser getUserDetails(String email, String password) {
-    String sql = "SELECT * FROM USERS WHERE email = ? AND pass = ?";
-    
-    try (PreparedStatement preparedStatement = DatabaseConnection.dbConnect.prepareStatement(sql)) {
-        preparedStatement.setString(1, email);
-        preparedStatement.setString(2, password);
 
-        try (ResultSet resultSet = preparedStatement.executeQuery()) {
-            if (resultSet.next()) {
-                // User found, create a User object with user details
-                return new GuestUser(
-                    resultSet.getInt("userID"),
-                    resultSet.getBoolean("isRegistered"),
-                    new Name(resultSet.getString("firstName"), resultSet.getString("lastName")),
-                    new Address(resultSet.getString("street"), resultSet.getString("city"), resultSet.getString("country")),
-                    resultSet.getLong("phoneNumber"),
-                    resultSet.getString("email"),
-                    resultSet.getString("pass"),
-                    resultSet.getString("accessLevel")
-                );
-            } else {
-                // No user found with the given email and password
-                return null;
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return null;
-    }
-}
+
 public boolean setUserRegistered(String email, String password) {
     String sql = "UPDATE USERS SET isRegistered = true WHERE email = ? AND pass = ?";
 
@@ -483,3 +583,90 @@ public boolean setUserRegistered(String email, String password) {
     }
     
 }
+
+
+
+    // // user has seen seatMap and chosen a seat, this function takes that seatNumber and changes isBooked to true in the SEAT table, 
+    // // and creates a ticket for them associated with their ID, name, etc.
+    // public void selectSeat(String seatNum, String flightNum, int userID) {
+    //     // change seat row isBooked to true
+    //     // SQL query to update the isBooked attribute to TRUE based on seatNumber and flightNumber
+    //     String updateQuery = "UPDATE SEAT SET isBooked = TRUE WHERE seatNumber = ? AND flightNumber = ?";
+
+    //     try (PreparedStatement updateStatement = DatabaseConnection.dbConnect.prepareStatement(updateQuery)) {
+    //         // Set values for the placeholders in the update query
+    //         updateStatement.setString(1, seatNum);
+    //         updateStatement.setString(2, flightNum);
+
+    //         // Execute the update query
+    //         int rowsAffected = updateStatement.executeUpdate();
+
+    //         if (rowsAffected > 0) {
+    //             System.out.println("Seat " + seatNum + " on Flight " + flightNum + " booked successfully!");
+    //         } else {
+    //             System.out.println("No matching seat found for the specified seatNumber and flightNumber.");
+    //         }
+
+    //         // create Ticket Number
+    //         // already have flightNum
+    //         // get first and last name from userID
+            
+    //         // already have seatNum
+    //         // get seatClass
+    //         // already have userID
+
+    //         // Create Ticket Number
+    //         String ticketNumber = generateUniqueTicketNumber();
+
+    //         // Get user information from USERS table
+    //         String userQuery = "SELECT firstName, lastName FROM USERS WHERE userID = ?";
+    //         try (PreparedStatement userStatement = DatabaseConnection.dbConnect.prepareStatement(userQuery)) {
+    //             userStatement.setInt(1, userID);
+    //             ResultSet userResultSet = userStatement.executeQuery();
+
+    //             if (userResultSet.next()) {
+    //                 String passengerFirstName = userResultSet.getString("firstName");
+    //                 String passengerLastName = userResultSet.getString("lastName");
+
+    //                 // Get seatClass from SEAT table
+    //                 String seatClassQuery = "SELECT seatClass FROM SEAT WHERE seatNumber = ? AND flightNumber = ?";
+    //                 try (PreparedStatement seatClassStatement = DatabaseConnection.dbConnect.prepareStatement(seatClassQuery)) {
+    //                     seatClassStatement.setString(1, seatNum);
+    //                     seatClassStatement.setString(2, flightNum);
+    //                     ResultSet seatClassResultSet = seatClassStatement.executeQuery();
+
+    //                     if (seatClassResultSet.next()) {
+    //                         String seatClass = seatClassResultSet.getString("seatClass");
+
+    //                         // Insert the ticket into the TICKET table
+    //                         String insertTicketQuery = "INSERT INTO TICKET (ticketNumber, flightNumber, passenger_fName, passenger_lName, seatNumber, seatClass, userID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    //                         try (PreparedStatement insertTicketStatement = DatabaseConnection.dbConnect.prepareStatement(insertTicketQuery)) {
+    //                             insertTicketStatement.setString(1, ticketNumber);
+    //                             insertTicketStatement.setString(2, flightNum);
+    //                             insertTicketStatement.setString(3, passengerFirstName);
+    //                             insertTicketStatement.setString(4, passengerLastName);
+    //                             insertTicketStatement.setString(5, seatNum);
+    //                             insertTicketStatement.setString(6, seatClass);
+    //                             insertTicketStatement.setInt(7, userID);
+
+    //                             int rowsInserted = insertTicketStatement.executeUpdate();
+
+    //                             if (rowsInserted > 0) {
+    //                                 System.out.println("Ticket " + ticketNumber + " created successfully!");
+    //                             } else {
+    //                                 System.out.println("Failed to create ticket.");
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //             // Handle exceptions as needed
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //         // Handle exceptions as needed
+    //     }
+
+    // }
