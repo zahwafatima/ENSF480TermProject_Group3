@@ -384,7 +384,7 @@ public class UserController {
             String seatClass = seat.getSeatClass();
             double price = 50;
     
-            System.out.println("Seat Number: " + seatNumber + ", Class: " + seatClass + ", Status: "  + ", Price: " + price);
+            System.out.println("Seat Number: " + seatNumber + ", Class: " + seatClass + ", Status: "  + ", Price: " + seatNumber + ", Class: ");
         }
 
         return seatMap;
