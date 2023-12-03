@@ -140,7 +140,28 @@ public class UserController {
 
     // user has seen seatMap and chosen a seat, this function takes that seatNumber and changes isBooked to true in the SEAT table, 
     // and creates a ticket for them associated with their ID, name, etc.
+
+
+    // user has seen seatMap and chosen a seat, this function takes that seatNumber and changes isBooked to true in the SEAT table, 
+    // and creates a ticket for them associated with their ID, name, etc.
     public void generateTicket(String seatNum, String flightNum, int userID) {
+        // change seat row isBooked to true
+        // SQL query to update the isBooked attribute to TRUE based on seatNumber and flightNumber
+        String updateQuery = "UPDATE SEAT SET isBooked = TRUE WHERE seatNumber = ? AND flightNumber = ?";
+
+        try (PreparedStatement updateStatement = DatabaseConnection.dbConnect.prepareStatement(updateQuery)) {
+            // Set values for the placeholders in the update query
+            updateStatement.setString(1, seatNum);
+            updateStatement.setString(2, flightNum);
+
+            // Execute the update query
+            int rowsAffected = updateStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Seat " + seatNum + " on Flight " + flightNum + " booked successfully!");
+            } else {
+                System.out.println("No matching seat found for the specified seatNumber and flightNumber.");
+            }
 
             // create Ticket Number
             // already have flightNum
@@ -198,10 +219,14 @@ public class UserController {
             } catch (SQLException e) {
                 e.printStackTrace();
                 // Handle exceptions as needed
-            
-        } 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions as needed
+        }
 
     }
+
 
     public List<Ticket> getUserTickets(int userID) {
         List<Ticket> userTickets = new ArrayList<>();
