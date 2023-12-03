@@ -39,6 +39,22 @@ public class FlightReservation {
         } else {
             System.out.println("Failed to connect to the database. Check your connection details.");
         }
+        // // Create a basic welcome panel
+        // WelcomePanel basicWelcomePanel = new BasicWelcomePanel();
+
+        // // Decorate the basic welcome panel
+        // WelcomePanelDecorator decoratedWelcomePanel = new EnhancedWelcomePanelDecorator(basicWelcomePanel);
+
+        // // Create the final decorated panel
+        // JPanel finalPanel = decoratedWelcomePanel.decoratePanel();
+
+        // // Display the final panel in a JFrame
+        // JFrame frame = new JFrame("Welcome Panel Demo");
+        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // frame.getContentPane().add(finalPanel);
+        // frame.setSize(400, 200);
+        // frame.setLocationRelativeTo(null);
+        // frame.setVisible(true);
     }
 }
 
